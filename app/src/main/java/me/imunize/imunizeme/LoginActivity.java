@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(){
-
+    /*
         edtCpf = (EditText) findViewById(R.id.usrusr);
         edtSenha = (EditText) findViewById(R.id.passwrd);
 
@@ -36,12 +37,13 @@ public class LoginActivity extends AppCompatActivity {
 
         URL url = null;
         try {
-            url = new URL("192.168.0.5:4000/auth"); //Colocar o IP da minha máquina para rodar no celular
+            url = new URL("201.95.56.222:4000/auth"); //Colocar o IP da minha máquina para rodar no celular
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Authorization", authValue);
             if(connection.getResponseCode() == 200){
+                Toast.makeText(this, connection.getResponseMessage(), Toast.LENGTH_SHORT).show();
                 Log.i("Message", connection.getResponseMessage());
             }
 
@@ -49,17 +51,12 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //return result.toString();
-
-    }
-    public static void main(String[] args){
-
-        System.out.println(encriptationValue("45196631801","imunizeme"));
-
+    */
     }
 
     private static String encriptationValue(String cpf, String senha){
 
-        senha = DigestUtils.sha1(senha).toString();
+        //senha = DigestUtils.sha1(senha).toString();
 
         String info = cpf + ":" + senha;
 
