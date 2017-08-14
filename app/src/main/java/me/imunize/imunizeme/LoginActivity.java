@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 Usuario usuario = new Usuario(cpf, senha);
 
-                new EnviaLoginTask(LoginActivity.this).execute(usuario);
-                UsuarioConverter converter = new UsuarioConverter();
+                //new EnviaLoginTask(LoginActivity.this).execute(usuario);
+                //UsuarioConverter converter = new UsuarioConverter();
 
 
 

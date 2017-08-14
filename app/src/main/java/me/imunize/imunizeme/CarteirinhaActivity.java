@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -96,6 +97,8 @@ public class CarteirinhaActivity extends AppCompatActivity
         if (id == R.id.nav_carteirinha) {
             // Handle the camera action
         } else if (id == R.id.nav_clinica_proxima) {
+            Intent vaiProMapa = new Intent(this, MapaActivity.class);
+            startActivity(vaiProMapa);
 
         } else if (id == R.id.nav_sair) {
 
