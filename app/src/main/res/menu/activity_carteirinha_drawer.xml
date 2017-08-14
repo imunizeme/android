@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_perfil"
+            android:title="Meu perfil" />
+        <item
+            android:id="@+id/nav_carteirinha"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Minha carteirinha" />
+        <item
+            android:id="@+id/nav_clinica_proxima"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Clínicas Próximas" />
+
+    </group>
+
+   <item android:title="Configurações">
+        <menu>
+            <item
+            android:id="@+id/nav_sair"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Sair" />
+
+        </menu>
+    </item>
+
+</menu>

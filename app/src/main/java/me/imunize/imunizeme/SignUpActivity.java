@@ -1,27 +1,32 @@
 package me.imunize.imunizeme;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity {
 
     EditText edtEmail, edtNomeCompleto, edtSenha, edtCpf;
+    TextView btCadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        btCadastrar = (TextView) findViewById(R.id.login_btCadastro);
+        btCadastrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SignUpActivity.this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     public void voltarTelaLogin(){
@@ -40,11 +45,10 @@ public class SignUpActivity extends AppCompatActivity {
         String senha = edtSenha.getText().toString();
         String cpf = edtCpf.getText().toString();
 
-        CadastrarUsuarioTask task = new CadastrarUsuarioTask();
-
+        //CadastrarUsuarioTask task = new CadastrarUsuarioTask();
 
     }
-
+/*
     private class CadastrarUsuarioTask extends AsyncTask<String, Void, String>{
 
         private ProgressDialog progress;
@@ -82,4 +86,5 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
     }
+    */
 }

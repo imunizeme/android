@@ -1,32 +1,74 @@
 package me.imunize.imunizeme;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.json.JSONStringer;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import me.imunize.imunizeme.converter.UsuarioConverter;
+import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.tasks.EnviaLoginTask;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText edtCpf, edtSenha;
+    //private EditText edtCpf, edtSenha;
+    private TextView btCadastro, btEntrar;
+    private String cpf, senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        btCadastro = (TextView) findViewById(R.id.cadastro);
+
+        btCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentCadastro = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intentCadastro);
+            }
+        });
+
+        btEntrar = (TextView) findViewById(R.id.login_btCadastro);
+        btEntrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                EditText edtCPF = (EditText) findViewById(R.id.login_cpf);
+                EditText edtSenha = (EditText) findViewById(R.id.login_senha);
+
+                cpf = edtCPF.getText().toString();
+                senha = edtSenha.getText().toString();
+
+                Usuario usuario = new Usuario(cpf, senha);
+
+                new EnviaLoginTask(LoginActivity.this).execute(usuario);
+                UsuarioConverter converter = new UsuarioConverter();
+
+
+
+                if(edtCPF.getText().toString().equals("123") && edtSenha.getText().toString().equals("imunizeme")){
+                    Intent intentCarteirinha = new Intent(LoginActivity.this, CarteirinhaActivity.class);
+                    startActivity(intentCarteirinha);
+                    finish();
+                }else{
+
+                    Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
     }
 
-    public void login(){
     /*
+    public void login(){
+
         edtCpf = (EditText) findViewById(R.id.usrusr);
         edtSenha = (EditText) findViewById(R.id.passwrd);
 
@@ -51,9 +93,9 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //return result.toString();
-    */
-    }
 
+    }*/
+/*
     private static String encriptationValue(String cpf, String senha){
 
         //senha = DigestUtils.sha1(senha).toString();
@@ -62,5 +104,5 @@ public class LoginActivity extends AppCompatActivity {
 
         return Base64.encodeBase64String(info.getBytes());
     }
-
+        */
 }
