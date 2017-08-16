@@ -3,19 +3,23 @@ package me.imunize.imunizeme;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import me.imunize.imunizeme.converter.UsuarioConverter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.imunize.imunizeme.models.Usuario;
-import me.imunize.imunizeme.tasks.EnviaLoginTask;
 
 public class LoginActivity extends AppCompatActivity {
 
     //private EditText edtCpf, edtSenha;
-    private TextView btCadastro, btEntrar;
+    @BindView(R.id.login_btcadastro) TextView btCadastro;
+    @BindView(R.id.login_btEntrar) TextView btEntrar;
+    @BindView(R.id.login_cpf) EditText edtCPF;
+    @BindView(R.id.login_senha) EditText edtSenha;
+
     private String cpf, senha;
 
     @Override
@@ -23,47 +27,36 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btCadastro = (TextView) findViewById(R.id.cadastro);
+        ButterKnife.bind(this);
 
-        btCadastro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentCadastro = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intentCadastro);
-            }
-        });
+    }
 
-        btEntrar = (TextView) findViewById(R.id.login_btCadastro);
-        btEntrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @OnClick(R.id.login_btEntrar)
+    protected void entrar() {
 
-                EditText edtCPF = (EditText) findViewById(R.id.login_cpf);
-                EditText edtSenha = (EditText) findViewById(R.id.login_senha);
+        cpf = edtCPF.getText().toString();
+        senha = edtSenha.getText().toString();
 
-                cpf = edtCPF.getText().toString();
-                senha = edtSenha.getText().toString();
+        Usuario usuario = new Usuario(cpf, senha);
 
-                Usuario usuario = new Usuario(cpf, senha);
-
-                //new EnviaLoginTask(LoginActivity.this).execute(usuario);
-                //UsuarioConverter converter = new UsuarioConverter();
+        //new EnviaLoginTask(LoginActivity.this).execute(usuario);
+        //UsuarioConverter converter = new UsuarioConverter();
 
 
+        if(edtCPF.getText().toString().equals("123") && edtSenha.getText().toString().equals("imunizeme")){
+            Intent intentCarteirinha = new Intent(LoginActivity.this, CarteirinhaActivity.class);
+            startActivity(intentCarteirinha);
+            finish();
+        }else{
 
-                if(edtCPF.getText().toString().equals("123") && edtSenha.getText().toString().equals("imunizeme")){
-                    Intent intentCarteirinha = new Intent(LoginActivity.this, CarteirinhaActivity.class);
-                    startActivity(intentCarteirinha);
-                    finish();
-                }else{
+            Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                    Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
+    @OnClick(R.id.login_btcadastro)
+    protected void cadastrar() {
+        Intent intentCadastro = new Intent(LoginActivity.this, SignUpActivity.class);
+        startActivity(intentCadastro);
     }
 
     /*

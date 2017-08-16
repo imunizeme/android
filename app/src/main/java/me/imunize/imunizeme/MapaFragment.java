@@ -32,9 +32,9 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        LatLng posicaoDaEscola = pegaCoordenadaDoEndereco("Rua Vergueiro 3185, Vila Mariana, Sao Paulo");
-        if (posicaoDaEscola != null) {
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(posicaoDaEscola, 17);
+        LatLng fiap = pegaCoordenadaDoEndereco("Avenida Lins de Vasconcelos, 1222 - São Paulo");
+        if (fiap != null) {
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
             googleMap.moveCamera(update);
         }
 

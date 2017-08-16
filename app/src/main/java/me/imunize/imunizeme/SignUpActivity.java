@@ -7,43 +7,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText edtEmail, edtNomeCompleto, edtSenha, edtCpf;
-    TextView btCadastrar;
+    @BindView(R.id.signup_email) EditText edtEmail;
+    @BindView(R.id.signup_nomeCompleto) EditText edtNomeCompleto;
+    @BindView(R.id.signup_senha) EditText edtSenha;
+    @BindView(R.id.signup_cpf) EditText edtCpf;
+    @BindView(R.id.signup_btCadastrar) TextView btCadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        btCadastrar = (TextView) findViewById(R.id.login_btCadastro);
-        btCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUpActivity.this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+        ButterKnife.bind(this);
 
     }
 
-    public void voltarTelaLogin(){
-
-    }
-
+    @OnClick(R.id.signup_btCadastrar)
     public void cadastrarUsuario(){
-
-        edtEmail = (EditText) findViewById(R.id.email);
-        edtNomeCompleto = (EditText) findViewById(R.id.nomeCompleto);
-        edtSenha = (EditText) findViewById(R.id.senha);
-        edtCpf = (EditText) findViewById(R.id.cpf);
 
         String email = edtEmail.getText().toString();
         String nomeCompleto = edtNomeCompleto.getText().toString();
         String senha = edtSenha.getText().toString();
         String cpf = edtCpf.getText().toString();
+
+        Toast.makeText(this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
 
         //CadastrarUsuarioTask task = new CadastrarUsuarioTask();
 
