@@ -54,10 +54,10 @@ public class UsuarioDAO extends SQLiteOpenHelper {
     @NonNull
     private ContentValues pegaDadosDoUsuario(Usuario usuario) {
         ContentValues dados = new ContentValues();
-        dados.put("nome", usuario.getNome());
+        dados.put("nome", usuario.getName());
         dados.put("email", usuario.getEmail());
-        dados.put("cpf", usuario.getCpf());
-        dados.put("senha", usuario.getSenha());
+        dados.put("cpf", usuario.getCpf_cnpj());
+        dados.put("senha", usuario.getPassword());
         return dados;
     }
 
@@ -70,10 +70,10 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         while (c.moveToNext()) {
             Usuario usuario = new Usuario();
             usuario.setId(c.getLong(c.getColumnIndex("id")));
-            usuario.setNome(c.getString(c.getColumnIndex("nome")));
+            usuario.setName(c.getString(c.getColumnIndex("nome")));
             usuario.setEmail(c.getString(c.getColumnIndex("email")));
-            usuario.setCpf(c.getString(c.getColumnIndex("cpf")));
-            usuario.setSenha(c.getString(c.getColumnIndex("senha")));
+            usuario.setCpf_cnpj(c.getString(c.getColumnIndex("cpf")));
+            usuario.setPassword(c.getString(c.getColumnIndex("senha")));
 
             usuarios.add(usuario);
         }

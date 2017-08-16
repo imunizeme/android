@@ -44,7 +44,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             if (coordenada != null) {
                 MarkerOptions marcador = new MarkerOptions();
                 marcador.position(coordenada);
-                marcador.title(aluno.getNome());
+                marcador.title(aluno.getName());
                 marcador.snippet(String.valueOf(aluno.getNota()));
                 googleMap.addMarker(marcador);
             }

@@ -7,9 +7,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -18,6 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signup_senha) EditText edtSenha;
     @BindView(R.id.signup_cpf) EditText edtCpf;
     @BindView(R.id.signup_btCadastrar) TextView btCadastrar;
+    private UsuarioService usuarioService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,14 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("127.0.0.1:8000/imunizeme/public/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        usuarioService = retrofit.create(UsuarioService.class);
 
     }
 
@@ -35,6 +50,10 @@ public class SignUpActivity extends AppCompatActivity {
         String nomeCompleto = edtNomeCompleto.getText().toString();
         String senha = edtSenha.getText().toString();
         String cpf = edtCpf.getText().toString();
+
+        Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
+
+        usuarioService.cadastrarUsuario(usuario);
 
         Toast.makeText(this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
 

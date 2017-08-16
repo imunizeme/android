@@ -1,5 +1,7 @@
 package me.imunize.imunizeme.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -9,25 +11,26 @@ import java.io.Serializable;
 public class Usuario implements Serializable{
 
     private Long id;
-    private String nome;
+    @SerializedName("name")
+    private String name;
     private String email;
-    private String cpf;
-    private String senha;
+    private String cpf_cnpj;
+    private String password;
 
 
-    public Usuario(String nome, String email, String cpf, String senha) {
-        this.nome = nome;
+    public Usuario(String name, String email, String cpf_cnpj, String password) {
+        this.name = name;
         this.email = email;
-        this.cpf = cpf;
-        this.senha = senha;
+        this.cpf_cnpj = cpf_cnpj;
+        this.password = password;
     }
 
     public Usuario() {
     }
 
-    public Usuario(String cpf, String senha) {
-        this.cpf = cpf;
-        this.senha = senha;
+    public Usuario(String cpf_cnpj, String password) {
+        this.cpf_cnpj = cpf_cnpj;
+        this.password = password;
     }
 
     public Long getId() {
@@ -38,12 +41,12 @@ public class Usuario implements Serializable{
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -54,19 +57,19 @@ public class Usuario implements Serializable{
         this.email = email;
     }
 
-    public String getCpf() {
-        return cpf;
+    public String getCpf_cnpj() {
+        return cpf_cnpj;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setCpf_cnpj(String cpf_cnpj) {
+        this.cpf_cnpj = cpf_cnpj;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

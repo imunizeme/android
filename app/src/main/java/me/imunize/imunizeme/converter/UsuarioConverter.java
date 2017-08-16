@@ -14,7 +14,7 @@ public class UsuarioConverter {
     public String converteParaJSONLogin (Usuario usuario){
         JSONStringer js = new JSONStringer();
 
-        String authValue = encriptationValue(usuario.getCpf(), usuario.getSenha());
+        String authValue = encriptationValue(usuario.getCpf_cnpj(), usuario.getPassword());
 
         try{
             js.object();
