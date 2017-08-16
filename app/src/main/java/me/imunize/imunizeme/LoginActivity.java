@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String info = cpf + ":" + senha;
 
-        return Base64.encodeBase64String(info.getBytes());
+        return "Basic " + Base64.encodeBase64String(info.getBytes());
     }
         */
 }
