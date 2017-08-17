@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +21,6 @@ import android.widget.ListView;
 public class CarteirinhaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ListView listaVacinas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +29,9 @@ public class CarteirinhaActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Estamos em manutenção, tente mais tarde", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Snackbar.make(getApplication(), "Estamos em manutenção, tente mais tarde", Snackbar.LENGTH_LONG)
+        //       .setAction("Action", null).show();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,12 +42,6 @@ public class CarteirinhaActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listaVacinas = (ListView) findViewById(R.id.listaVacinas);
-
-
-        String[] nomes = {"Febre Amarela", "Gripe", "Hepatite B", "Tríplice Viral"};
-        ArrayAdapter<String> vacinas = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nomes);
-        listaVacinas.setAdapter(vacinas);
 
 
     }
@@ -94,14 +84,28 @@ public class CarteirinhaActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_carteirinha) {
-            // Handle the camera action
+        FragmentManager manager;
+        FragmentTransaction tx;
+
+        if(id == R.id.nav_perfil){
+
+        } else if (id == R.id.nav_carteirinha) {
+
+            manager = getSupportFragmentManager();
+            tx = manager.beginTransaction();
+            tx.replace(R.id.frame_principal, new CarteirinhaFragment(getSupportFragmentManager()));
+            tx.commit();
+
         } else if (id == R.id.nav_clinica_proxima) {
-            Intent vaiProMapa = new Intent(this, MapaActivity.class);
-            startActivity(vaiProMapa);
+            manager = getSupportFragmentManager();
+            tx = manager.beginTransaction();
+            tx.replace(R.id.frame_principal, new MapaFragment());
+            tx.commit();
 
         } else if (id == R.id.nav_sair) {
-
+            Intent vaiProLogin = new Intent(this, LoginActivity.class);
+            startActivity(vaiProLogin);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

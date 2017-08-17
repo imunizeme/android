@@ -10,6 +10,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.imunize.imunizeme.dao.UsuarioDAO;
 import me.imunize.imunizeme.models.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
@@ -42,7 +43,18 @@ public class LoginActivity extends AppCompatActivity {
         //new EnviaLoginTask(LoginActivity.this).execute(usuario);
         //UsuarioConverter converter = new UsuarioConverter();
 
+        UsuarioDAO dao = new UsuarioDAO(this);
+        Usuario login = dao.fazLogin(usuario);
+        if(login != null){
+            Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
+            startActivity(vaiPraHome);
+            finish();
+        }else{
+            Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
+        }
 
+
+        /*
         if(edtCPF.getText().toString().equals("123") && edtSenha.getText().toString().equals("imunizeme")){
             Intent intentCarteirinha = new Intent(LoginActivity.this, CarteirinhaActivity.class);
             startActivity(intentCarteirinha);
@@ -50,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         }else{
 
             Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     @OnClick(R.id.login_btcadastro)

@@ -7,4 +7,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
+
+    <string-array name="title_tabs">
+        <item>Adulto</item>
+        <item>Adolescente</item>
+        <item>Criança</item>
+    </string-array>
 </resources>

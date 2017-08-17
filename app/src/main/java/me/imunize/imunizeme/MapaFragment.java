@@ -33,27 +33,35 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
 
         LatLng fiap = pegaCoordenadaDoEndereco("Avenida Lins de Vasconcelos, 1222 - São Paulo");
+        LatLng gui = pegaCoordenadaDoEndereco("Rua Antonio Tavares, 300 - São Paulo");
         if (fiap != null) {
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
             googleMap.moveCamera(update);
         }
 
+        MarkerOptions marcador = new MarkerOptions();
+        marcador.position(fiap);
+        marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
+        marcador.snippet("O meu app é foda, me chupem!");
+        googleMap.addMarker(marcador);
+
+        marcador.position(gui);
+        marcador.title("Casa do Gui");
+        marcador.snippet("Parabéns pelo emprego");
+        googleMap.addMarker(marcador);
+
         /*AlunoDAO alunoDAO = new AlunoDAO(getContext());
         for (Aluno aluno : alunoDAO.buscaAlunos()) {
             LatLng coordenada = pegaCoordenadaDoEndereco(aluno.getEndereco());
             if (coordenada != null) {
-                MarkerOptions marcador = new MarkerOptions();
-                marcador.position(coordenada);
-                marcador.title(aluno.getName());
-                marcador.snippet(String.valueOf(aluno.getNota()));
-                googleMap.addMarker(marcador);
+
             }
         }
         alunoDAO.close();
 
-        new Localizador(getContext(), googleMap);
-        */
 
+        */
+        //new Localizador(getContext(), googleMap, getActivity());
     }
 
 

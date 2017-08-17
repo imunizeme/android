@@ -29,7 +29,7 @@ public class UsuarioDAO extends SQLiteOpenHelper {
                 "nome TEXT NOT NULL, " +
                 "email TEXT, " +
                 "cpf TEXT, " +
-                "senha TEXT);";
+                "senha TEXT, logado INTEGER);";
         db.execSQL(sql);
 
     }
@@ -97,5 +97,39 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         String[] params = {usuario.getId().toString()};
         db.update("Users", dados, "id = ?", params);
     }
+
+    public boolean existeCPF(String cpf){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Users WHERE cpf = ?", new String[]{cpf});
+
+        if (c.moveToNext()){
+            c.close();
+            return true;
+        }else{
+            c.close();
+            return false;
+        }
+
+    }
+
+    public Usuario fazLogin(Usuario usuario){
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Users WHERE cpf = ? AND senha = ?", new String[]{usuario.getCpf_cnpj(), usuario.getPassword()});
+
+        if (c.moveToNext()) {
+            usuario.setId(c.getLong(c.getColumnIndex("id")));
+            usuario.setName(c.getString(c.getColumnIndex("nome")));
+            usuario.setEmail(c.getString(c.getColumnIndex("email")));
+            usuario.setCpf_cnpj(c.getString(c.getColumnIndex("cpf")));
+            usuario.setPassword(c.getString(c.getColumnIndex("senha")));
+
+            return usuario;
+        }
+        c.close();
+
+        return null;
+    }
+
 
 }

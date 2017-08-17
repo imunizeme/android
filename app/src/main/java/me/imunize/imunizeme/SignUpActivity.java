@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.imunize.imunizeme.dao.UsuarioDAO;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Retrofit;
@@ -34,12 +36,13 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        Retrofit retrofit = new Retrofit.Builder()
+        /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("127.0.0.1:8000/imunizeme/public/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         usuarioService = retrofit.create(UsuarioService.class);
+        */
 
     }
 
@@ -53,9 +56,22 @@ public class SignUpActivity extends AppCompatActivity {
 
         Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
 
-        usuarioService.cadastrarUsuario(usuario);
+        UsuarioDAO dao = new UsuarioDAO(this);
 
-        Toast.makeText(this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
+        if(dao.existeCPF(cpf)){
+            Toast.makeText(this,"Esse CPF já existe na nossa base de dados. Tente outro.", Toast.LENGTH_SHORT).show();
+        }else{
+            dao.insere(usuario);
+            Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
+            startActivity(vaiPraHome);
+            finish();
+        }
+
+
+
+        //usuarioService.cadastrarUsuario(usuario);
+
+        //Toast.makeText(this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
 
         //CadastrarUsuarioTask task = new CadastrarUsuarioTask();
 

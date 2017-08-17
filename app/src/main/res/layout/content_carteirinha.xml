@@ -8,10 +8,11 @@
     tools:context="me.imunize.imunizeme.CarteirinhaActivity"
     tools:showIn="@layout/app_bar_carteirinha">
 
-    <ListView
-        android:id="@+id/listaVacinas"
+    <FrameLayout
+        android:id="@+id/frame_principal"
+        android:padding="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </LinearLayout>
