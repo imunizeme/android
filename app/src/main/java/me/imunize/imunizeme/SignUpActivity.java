@@ -3,8 +3,11 @@ package me.imunize.imunizeme;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +18,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dao.UsuarioDAO;
 import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,7 +33,11 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signup_senha) EditText edtSenha;
     @BindView(R.id.signup_cpf) EditText edtCpf;
     @BindView(R.id.signup_btCadastrar) TextView btCadastrar;
+    @BindView(R.id.signup_layout_campos) LinearLayout layoutCampos;
+    @BindView(R.id.signup_layout_progress) RelativeLayout layoutProgress;
     private UsuarioService usuarioService;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("127.0.0.1:8000/imunizeme/public/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        usuarioService = retrofit.create(UsuarioService.class);
-        */
+        usuarioService = ServiceGenerator.createService();
 
     }
 
@@ -56,7 +60,36 @@ public class SignUpActivity extends AppCompatActivity {
 
         Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
 
-        UsuarioDAO dao = new UsuarioDAO(this);
+        Log.i("Senha com hash: ", usuario.getHashPassword());
+        Call<Void> call =  usuarioService.cadastrarUsuario(usuario.getCpf_cnpj(), usuario.getHashPassword());
+
+        layoutCampos.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if(response.isSuccessful()){
+                    Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
+
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG).show();
+                    layoutCampos.setVisibility(View.VISIBLE);
+                    layoutProgress.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG);
+                layoutCampos.setVisibility(View.VISIBLE);
+                layoutProgress.setVisibility(View.GONE);
+            }
+        });
+
+        /*UsuarioDAO dao = new UsuarioDAO(this);
 
         if(dao.existeCPF(cpf)){
             Toast.makeText(this,"Esse CPF já existe na nossa base de dados. Tente outro.", Toast.LENGTH_SHORT).show();
@@ -65,7 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
             Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
             startActivity(vaiPraHome);
             finish();
-        }
+        }*/
 
 
 
@@ -76,43 +109,4 @@ public class SignUpActivity extends AppCompatActivity {
         //CadastrarUsuarioTask task = new CadastrarUsuarioTask();
 
     }
-/*
-    private class CadastrarUsuarioTask extends AsyncTask<String, Void, String>{
-
-        private ProgressDialog progress;
-
-        protected void onPreExecute(){
-            progress = ProgressDialog.show(SignUpActivity.this, "Aguarde", "Efetuando o Cadastro...");
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url = null;
-            StringBuilder result = new StringBuilder();
-            try {
-                url = new URL("http://viacep.com.br/ws/" + strings[0] + "/json/");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                connection.setRequestMethod("POST");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-
-                while ( (line = bufferedReader.readLine()) != null){
-                    result.append(line);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result.toString();
-        }
-
-        protected void onPostExecute(String result){
-            progress.dismiss();
-
-
-
-        }
-
-    }
-    */
 }

@@ -2,13 +2,18 @@ package me.imunize.imunizeme.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Sr. Décio Montanhani on 09/08/2017.
  */
 
 public class Usuario implements Serializable{
+
 
     private Long id;
     @SerializedName("name")
@@ -71,5 +76,28 @@ public class Usuario implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getHashPassword(){
+        return sha1(password);
+    }
+
+    static String sha1(String input)
+    {
+        MessageDigest mDigest = null;
+        StringBuffer sb = null;
+        try {
+            mDigest = MessageDigest.getInstance("SHA1");
+            byte[] result = mDigest.digest(input.getBytes());
+            sb = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
     }
 }

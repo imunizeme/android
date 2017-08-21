@@ -6,7 +6,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
         android:orientation="vertical">
 
         <ImageView
@@ -21,29 +20,29 @@
             android:id="@+id/login_txvTitulo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/lnrlyout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/login_logo"
             android:layout_marginBottom="20dp"
             android:gravity="top|center"
-            android:text="Login"
+            android:text="@string/login_login"
             android:textColor="#000"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
-
         <LinearLayout
-            android:id="@+id/lnrlyout"
+            android:id="@+id/login_layout_campos"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp">
+            android:layout_height="wrap_content">
+
+
+
 
             <LinearLayout
+                android:id="@+id/lnrlyout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -56,26 +55,27 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_person_black_24dp" />
+                        android:src="@drawable/ic_person_black_24dp"
+                        />
 
                     <EditText
                         android:id="@+id/login_cpf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:background="#00000000"
-                        android:hint="CPF"
+                        android:hint="@string/login_cpf"
                         android:inputType="text"
-                        android:letterSpacing="0.1"
                         android:textColor="#000"
                         android:textColorHint="#000"
-                        android:textSize="16dp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#000"></LinearLayout>
+                    android:background="#000"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,57 +94,71 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:background="#00000000"
-                        android:hint="Senha"
+                        android:hint="@string/login_senha"
                         android:inputType="textPassword"
-                        android:letterSpacing="0.1"
                         android:textColor="#000"
                         android:textColorHint="#000"
-                        android:textSize="16dp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#000"></LinearLayout>
+                    android:background="#000"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="30dp">
+                <TextView
+                    android:id="@+id/login_btEntrar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="@string/login_bt_entrar"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/login_btcadastro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="34dp"
+                    android:background="@drawable/border"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="@string/login_bt_cadastro"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/login_layout_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="30dp">
-            <TextView
-                android:id="@+id/login_btEntrar"
+            android:visibility="gone"
+            android:padding="20dp">
+
+            <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/border"
-                android:gravity="center"
-                android:onClick="login"
-                android:padding="15dp"
-                android:text="Entrar"
-                android:textColor="#000"
-                android:textStyle="bold" />
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                />
 
-            <TextView
-                android:id="@+id/login_btcadastro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/signup_btCadastrar"
-                android:layout_alignBottom="@+id/signup_btCadastrar"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="34dp"
-                android:layout_toEndOf="@+id/signup_btCadastrar"
-                android:background="@drawable/border"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="Cadastro"
-                android:textColor="#000"
-                android:textStyle="bold" />
+        </RelativeLayout>
 
-        </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>

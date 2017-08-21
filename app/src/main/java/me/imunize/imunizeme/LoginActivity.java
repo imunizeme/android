@@ -3,15 +3,26 @@ package me.imunize.imunizeme;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dao.UsuarioDAO;
+import me.imunize.imunizeme.models.RespostaAutenticacao;
 import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.service.ServiceGenerator;
+import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,13 +31,18 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_btEntrar) TextView btEntrar;
     @BindView(R.id.login_cpf) EditText edtCPF;
     @BindView(R.id.login_senha) EditText edtSenha;
+    @BindView(R.id.login_layout_campos) LinearLayout layoutCampos;
+    @BindView(R.id.login_layout_progress) RelativeLayout layoutProgress;
 
     private String cpf, senha;
+    UsuarioService usuarioService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        usuarioService = ServiceGenerator.createService();
 
         ButterKnife.bind(this);
 
@@ -38,12 +54,46 @@ public class LoginActivity extends AppCompatActivity {
         cpf = edtCPF.getText().toString();
         senha = edtSenha.getText().toString();
 
-        Usuario usuario = new Usuario(cpf, senha);
+        String auth = encriptationValue(cpf, senha);
+
+        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth, cpf, senha);
+
+        layoutCampos.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
+
+        call.enqueue(new Callback<RespostaAutenticacao>() {
+            @Override
+            public void onResponse(Call<RespostaAutenticacao> call, Response<RespostaAutenticacao> response) {
+
+                RespostaAutenticacao resposta = response.body();
+
+                if(response.isSuccessful()){
+                    Toast.makeText(LoginActivity.this, "Com sucesso!"+ resposta.getToken(), Toast.LENGTH_SHORT).show();
+                    Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
+                    startActivity(vaiPraHome);
+                    finish();
+                }else{
+                    Toast.makeText(LoginActivity.this, "Login e/ou senha incorretos, tente Novamente.", Toast.LENGTH_SHORT).show();
+                    layoutCampos.setVisibility(View.VISIBLE);
+                    layoutProgress.setVisibility(View.GONE);
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<RespostaAutenticacao> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Com erro!", Toast.LENGTH_SHORT).show();
+                layoutCampos.setVisibility(View.VISIBLE);
+                layoutProgress.setVisibility(View.GONE);
+            }
+        });
 
         //new EnviaLoginTask(LoginActivity.this).execute(usuario);
         //UsuarioConverter converter = new UsuarioConverter();
 
-        UsuarioDAO dao = new UsuarioDAO(this);
+        /*UsuarioDAO dao = new UsuarioDAO(this);
         Usuario login = dao.fazLogin(usuario);
         if(login != null){
             Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
@@ -51,18 +101,8 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }else{
             Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
-        }
-
-
-        /*
-        if(edtCPF.getText().toString().equals("123") && edtSenha.getText().toString().equals("imunizeme")){
-            Intent intentCarteirinha = new Intent(LoginActivity.this, CarteirinhaActivity.class);
-            startActivity(intentCarteirinha);
-            finish();
-        }else{
-
-            Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
         }*/
+
     }
 
     @OnClick(R.id.login_btcadastro)
@@ -71,43 +111,15 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intentCadastro);
     }
 
-    /*
-    public void login(){
 
-        edtCpf = (EditText) findViewById(R.id.usrusr);
-        edtSenha = (EditText) findViewById(R.id.passwrd);
-
-        String cpf = edtCpf.getText().toString();
-        String senha = edtSenha.getText().toString();
-
-        String authValue = encriptationValue(cpf, senha);
-
-        URL url = null;
-        try {
-            url = new URL("201.95.56.222:4000/auth"); //Colocar o IP da minha máquina para rodar no celular
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", authValue);
-            if(connection.getResponseCode() == 200){
-                Toast.makeText(this, connection.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                Log.i("Message", connection.getResponseMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //return result.toString();
-
-    }*/
-/*
     private static String encriptationValue(String cpf, String senha){
 
         //senha = DigestUtils.sha1(senha).toString();
 
         String info = cpf + ":" + senha;
 
-        return "Basic " + Base64.encodeBase64String(info.getBytes());
+
+        return "Basic " + Base64.encodeToString(info.getBytes(), Base64.NO_WRAP);
     }
-        */
+
 }
