@@ -1,6 +1,8 @@
 package me.imunize.imunizeme;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,20 +13,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.GsonBuilder;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.imunize.imunizeme.dao.UsuarioDAO;
+import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.dto.UsuarioCadastro;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -36,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signup_layout_campos) LinearLayout layoutCampos;
     @BindView(R.id.signup_layout_progress) RelativeLayout layoutProgress;
     private UsuarioService usuarioService;
+    String token;
 
 
 
@@ -53,27 +56,68 @@ public class SignUpActivity extends AppCompatActivity {
     @OnClick(R.id.signup_btCadastrar)
     public void cadastrarUsuario(){
 
-        String email = edtEmail.getText().toString();
-        String nomeCompleto = edtNomeCompleto.getText().toString();
-        String senha = edtSenha.getText().toString();
-        String cpf = edtCpf.getText().toString();
+        final String email = edtEmail.getText().toString();
+        final String nomeCompleto = edtNomeCompleto.getText().toString();
+        final String senha = edtSenha.getText().toString();
+        final String cpf = edtCpf.getText().toString();
+
+        String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
+        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
+
+
+
+
+        call.enqueue(new Callback<RespostaAutenticacao>() {
+            @Override
+            public void onResponse(Call<RespostaAutenticacao> call, Response<RespostaAutenticacao> response) {
+                RespostaAutenticacao resposta = response.body();
+                Log.i("Body ", response.body().toString());
+
+                if(response.isSuccessful()){
+                    token =  "Bearer " + resposta.getToken();
+                    Log.i("Token -> ", token);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
+                    SharedPreferences.Editor ed = preferences.edit();
+                    ed.putString("token", token);
+                    ed.commit();
+
+                    Toast.makeText(SignUpActivity.this, "Autenticou com Administrador", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RespostaAutenticacao> call, Throwable t) {
+                Toast.makeText(SignUpActivity.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
 
         Log.i("Senha com hash: ", usuario.getHashPassword());
-        Call<Void> call =  usuarioService.cadastrarUsuario(usuario.getCpf_cnpj(), usuario.getHashPassword());
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", preferences.getString("token", null));
+
+        Call<Void> call2 =  usuarioService.cadastrarUsuario(map, new UsuarioCadastro(usuario.getCpf_cnpj(), usuario.getHashPassword()));
 
         layoutCampos.setVisibility(View.GONE);
         layoutProgress.setVisibility(View.VISIBLE);
 
-        call.enqueue(new Callback<Void>() {
+        call2.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 if(response.isSuccessful()){
                     Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
+                    Intent vaiPraHome = new Intent(SignUpActivity.this, CarteirinhaActivity.class);
+                    startActivity(vaiPraHome);
+                    finish();
 
                 }else{
+                    Log.i("Body: ", response.raw().toString());
                     Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG).show();
                     layoutCampos.setVisibility(View.VISIBLE);
                     layoutProgress.setVisibility(View.GONE);
@@ -83,11 +127,12 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG);
+                Log.e("onFailure -> ", t.getMessage());
                 layoutCampos.setVisibility(View.VISIBLE);
                 layoutProgress.setVisibility(View.GONE);
             }
         });
+
 
         /*UsuarioDAO dao = new UsuarioDAO(this);
 

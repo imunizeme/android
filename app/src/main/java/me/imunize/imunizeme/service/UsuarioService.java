@@ -1,13 +1,15 @@
 package me.imunize.imunizeme.service;
 
-import me.imunize.imunizeme.models.RespostaAutenticacao;
+import java.util.Map;
+
+import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.dto.UsuarioCadastro;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 
 /**
@@ -16,15 +18,13 @@ import retrofit2.http.POST;
 
 public interface UsuarioService {
 
-    @FormUrlEncoded
     @POST("api/imunizeme/public/users")
-    Call<Void> cadastrarUsuario(@Field("cpf_cnpj") String cpf, @Field("password") String password);
+    Call<Void> cadastrarUsuario(@HeaderMap Map<String, String> map, @Body UsuarioCadastro user);
 
     @GET("api/imunizeme/public/users")
      Call<Usuario> pegarUsuario();
 
-    @FormUrlEncoded
     @POST("auth/auth")
-    Call<RespostaAutenticacao> autenticarUsuario(@Header("Authorization") String authValue, @Field("cpf_cnpj") String cpf, @Field("password") String senha);
+    Call<RespostaAutenticacao> autenticarUsuario(@Header("Authorization") String authValue);
 
 }

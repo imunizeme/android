@@ -1,4 +1,4 @@
-package me.imunize.imunizeme.models;
+package me.imunize.imunizeme.dto;
 
 import com.google.gson.annotations.SerializedName;
 

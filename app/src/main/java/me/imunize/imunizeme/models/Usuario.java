@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by Sr. Décio Montanhani on 09/08/2017.
  */
 
+
 public class Usuario implements Serializable{
 
 

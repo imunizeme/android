@@ -94,12 +94,14 @@ public class CarteirinhaActivity extends AppCompatActivity
             manager = getSupportFragmentManager();
             tx = manager.beginTransaction();
             tx.replace(R.id.frame_principal, new CarteirinhaFragment(getSupportFragmentManager()));
+            tx.addToBackStack(null);
             tx.commit();
 
         } else if (id == R.id.nav_clinica_proxima) {
             manager = getSupportFragmentManager();
             tx = manager.beginTransaction();
             tx.replace(R.id.frame_principal, new MapaFragment());
+            tx.addToBackStack(null);
             tx.commit();
 
         } else if (id == R.id.nav_sair) {

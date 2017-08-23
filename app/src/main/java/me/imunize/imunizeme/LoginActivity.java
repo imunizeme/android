@@ -1,8 +1,8 @@
 package me.imunize.imunizeme;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
@@ -10,19 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.imunize.imunizeme.dao.UsuarioDAO;
-import me.imunize.imunizeme.models.RespostaAutenticacao;
-import me.imunize.imunizeme.models.Usuario;
+import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String auth = encriptationValue(cpf, senha);
 
-        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth, cpf, senha);
+        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
 
         layoutCampos.setVisibility(View.GONE);
         layoutProgress.setVisibility(View.VISIBLE);
@@ -90,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
         //new EnviaLoginTask(LoginActivity.this).execute(usuario);
         //UsuarioConverter converter = new UsuarioConverter();
 
@@ -112,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private static String encriptationValue(String cpf, String senha){
+    public static String encriptationValue(String cpf, String senha){
 
         //senha = DigestUtils.sha1(senha).toString();
 
