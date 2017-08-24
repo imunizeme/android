@@ -53,10 +53,15 @@ public class LoginActivity extends AppCompatActivity {
 
         String auth = encriptationValue(cpf, senha);
 
-        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
-
         layoutCampos.setVisibility(View.GONE);
         layoutProgress.setVisibility(View.VISIBLE);
+
+        fazLogin(auth);
+
+    }
+
+    private void fazLogin(String auth) {
+        Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
 
         call.enqueue(new Callback<RespostaAutenticacao>() {
             @Override
@@ -65,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 RespostaAutenticacao resposta = response.body();
 
                 if(response.isSuccessful()){
-                    Toast.makeText(LoginActivity.this, "Com sucesso!"+ resposta.getToken(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Com sucesso!", Toast.LENGTH_SHORT).show();
                     Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
                     startActivity(vaiPraHome);
                     finish();
@@ -73,10 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Login e/ou senha incorretos, tente Novamente.", Toast.LENGTH_SHORT).show();
                     layoutCampos.setVisibility(View.VISIBLE);
                     layoutProgress.setVisibility(View.GONE);
-
                 }
-
-
             }
 
             @Override
@@ -86,21 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                 layoutProgress.setVisibility(View.GONE);
             }
         });
-
-
-        //new EnviaLoginTask(LoginActivity.this).execute(usuario);
-        //UsuarioConverter converter = new UsuarioConverter();
-
-        /*UsuarioDAO dao = new UsuarioDAO(this);
-        Usuario login = dao.fazLogin(usuario);
-        if(login != null){
-            Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
-            startActivity(vaiPraHome);
-            finish();
-        }else{
-            Toast.makeText(LoginActivity.this,"Login e/ou senha errados, tente novamente.", Toast.LENGTH_SHORT).show();
-        }*/
-
     }
 
     @OnClick(R.id.login_btcadastro)
@@ -115,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
         //senha = DigestUtils.sha1(senha).toString();
 
         String info = cpf + ":" + senha;
-
 
         return "Basic " + Base64.encodeToString(info.getBytes(), Base64.NO_WRAP);
     }

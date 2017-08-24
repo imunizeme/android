@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "959321098387",
+    "firebase_url": "https://imunizeme.firebaseio.com",
+    "project_id": "imunizeme",
+    "storage_bucket": "imunizeme.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959321098387:android:6497795133dbd5cd",
+        "android_client_info": {
+          "package_name": "me.imunize.imunizeme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959321098387-efug09hoicicct85b66vd4q8hofq8j44.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.imunize.imunizeme",
+            "certificate_hash": "db6c9c2bb357a4ba902ff2f0fdcaaa3eb5cd000e"
+          }
+        },
+        {
+          "client_id": "959321098387-qujog7ba6opfuv0udqm1mq8aogk5cu8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjMnAPQoi-NW-qLkTCwuWE0QhUoywRY-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959321098387-qujog7ba6opfuv0udqm1mq8aogk5cu8j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
