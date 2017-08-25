@@ -39,7 +39,7 @@
             android:value="@string/google_maps_key" />
 
         <service
-            android:name=".service.FirebaseIdService">
+            android:name=".firebase.FirebaseIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

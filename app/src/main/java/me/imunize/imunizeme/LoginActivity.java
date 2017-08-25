@@ -15,6 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.helpers.Mask;
+import me.imunize.imunizeme.helpers.Validator;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
@@ -43,21 +45,28 @@ public class LoginActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        edtCPF.addTextChangedListener(Mask.insert("###.###.###-##", edtCPF));
+
     }
 
     @OnClick(R.id.login_btEntrar)
     protected void entrar() {
 
-        cpf = edtCPF.getText().toString();
-        senha = edtSenha.getText().toString();
+        if(Validator.validateNotNull(edtCPF, "Preencha o CPF") ||
+                Validator.validateNotNull(edtSenha, "Preencha a Senha") ||
+                Validator.validateCPF(edtCPF.getText().toString())){
 
-        String auth = encriptationValue(cpf, senha);
+            cpf = Mask.unmask(edtCPF.getText().toString());
+            senha = edtSenha.getText().toString();
 
-        layoutCampos.setVisibility(View.GONE);
-        layoutProgress.setVisibility(View.VISIBLE);
+            String auth = encriptationValue(cpf, senha);
 
-        fazLogin(auth);
+            layoutCampos.setVisibility(View.GONE);
+            layoutProgress.setVisibility(View.VISIBLE);
 
+            fazLogin(auth);
+
+        }
     }
 
     private void fazLogin(String auth) {

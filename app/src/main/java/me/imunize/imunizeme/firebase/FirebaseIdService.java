@@ -1,4 +1,4 @@
-package me.imunize.imunizeme.service;
+package me.imunize.imunizeme.firebase;
 
 import android.util.Log;
 

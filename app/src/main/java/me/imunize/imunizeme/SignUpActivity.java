@@ -2,6 +2,7 @@ package me.imunize.imunizeme;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.MaskFilter;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.helpers.Mask;
+import me.imunize.imunizeme.helpers.Validator;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.dto.UsuarioCadastro;
 import me.imunize.imunizeme.service.ServiceGenerator;
@@ -49,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        edtCpf.addTextChangedListener(Mask.insert("###.###.###-##", edtCpf));
         usuarioService = ServiceGenerator.createService();
 
     }
@@ -56,16 +60,84 @@ public class SignUpActivity extends AppCompatActivity {
     @OnClick(R.id.signup_btCadastrar)
     public void cadastrarUsuario(){
 
-        final String email = edtEmail.getText().toString();
-        final String nomeCompleto = edtNomeCompleto.getText().toString();
-        final String senha = edtSenha.getText().toString();
-        final String cpf = edtCpf.getText().toString();
 
-        String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
+        if(Validator.validateNotNull(edtCpf, "Preencha o CPF") ||
+                Validator.validateNotNull(edtSenha, "Preencha a Senha") ||
+                Validator.validateNotNull(edtEmail, "Preencha o Email") ||
+                Validator.validateNotNull(edtNomeCompleto, "Preencha o Nome"))
+        {
+
+            final String email = edtEmail.getText().toString();
+            final String nomeCompleto = edtNomeCompleto.getText().toString();
+            final String senha = edtSenha.getText().toString();
+            final String cpf = Mask.unmask(edtCpf.getText().toString());
+
+            boolean emailValido = Validator.validateEmail(email);
+            boolean cpfValido = Validator.validateCPF(cpf);
+
+            if(!emailValido){
+                edtEmail.setError("Email inválido");
+                edtEmail.setFocusable(true);
+                edtEmail.requestFocus();
+            }else if(!cpfValido){
+                edtCpf.setError("CPF inválido");
+                edtCpf.setFocusable(true);
+                edtCpf.requestFocus();
+            } else{
+                String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
+                pegaToken(auth);
+                fazCadastro(email, nomeCompleto, senha, cpf);
+            }
+
+        }
+
+    }
+
+    private void fazCadastro(String email, String nomeCompleto, String senha, String cpf) {
+        Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
+
+        Log.i("Senha com hash: ", usuario.getHashPassword());
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", preferences.getString("token", null));
+
+        Call<Void> call2 =  usuarioService.cadastrarUsuario(map, new UsuarioCadastro(usuario.getCpf_cnpj(), usuario.getHashPassword()));
+
+        layoutCampos.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
+
+        call2.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if(response.isSuccessful()){
+                    Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
+                    Intent vaiPraLogin = new Intent(SignUpActivity.this, LoginActivity.class);
+                    startActivity(vaiPraLogin);
+                    finish();
+
+                }else{
+                    Log.i("Body: ", response.raw().toString());
+                    Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG).show();
+                    layoutCampos.setVisibility(View.VISIBLE);
+                    layoutProgress.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("onFailure -> ", t.getMessage());
+                layoutCampos.setVisibility(View.VISIBLE);
+                layoutProgress.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void pegaToken(String auth) {
         Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
-
-
-
 
         call.enqueue(new Callback<RespostaAutenticacao>() {
             @Override
@@ -90,68 +162,5 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
-
-        Log.i("Senha com hash: ", usuario.getHashPassword());
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("Authorization", preferences.getString("token", null));
-
-        Call<Void> call2 =  usuarioService.cadastrarUsuario(map, new UsuarioCadastro(usuario.getCpf_cnpj(), usuario.getHashPassword()));
-
-        layoutCampos.setVisibility(View.GONE);
-        layoutProgress.setVisibility(View.VISIBLE);
-
-        call2.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-
-                if(response.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
-                    Intent vaiPraHome = new Intent(SignUpActivity.this, CarteirinhaActivity.class);
-                    startActivity(vaiPraHome);
-                    finish();
-
-                }else{
-                    Log.i("Body: ", response.raw().toString());
-                    Toast.makeText(SignUpActivity.this, "Erro ao fazer o cadastro. Tente novamente mais tarde", Toast.LENGTH_LONG).show();
-                    layoutCampos.setVisibility(View.VISIBLE);
-                    layoutProgress.setVisibility(View.GONE);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("onFailure -> ", t.getMessage());
-                layoutCampos.setVisibility(View.VISIBLE);
-                layoutProgress.setVisibility(View.GONE);
-            }
-        });
-
-
-        /*UsuarioDAO dao = new UsuarioDAO(this);
-
-        if(dao.existeCPF(cpf)){
-            Toast.makeText(this,"Esse CPF já existe na nossa base de dados. Tente outro.", Toast.LENGTH_SHORT).show();
-        }else{
-            dao.insere(usuario);
-            Intent vaiPraHome = new Intent(this, CarteirinhaActivity.class);
-            startActivity(vaiPraHome);
-            finish();
-        }*/
-
-
-
-        //usuarioService.cadastrarUsuario(usuario);
-
-        //Toast.makeText(this,"Estamos em manutenção, tente mais tarde", Toast.LENGTH_SHORT).show();
-
-        //CadastrarUsuarioTask task = new CadastrarUsuarioTask();
-
     }
 }
