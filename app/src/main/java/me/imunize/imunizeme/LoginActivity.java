@@ -52,8 +52,8 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login_btEntrar)
     protected void entrar() {
 
-        if(Validator.validateNotNull(edtCPF, "Preencha o CPF") ||
-                Validator.validateNotNull(edtSenha, "Preencha a Senha") ||
+        if(Validator.validateNotNull(edtCPF, "Preencha o CPF") &&
+                Validator.validateNotNull(edtSenha, "Preencha a Senha") &&
                 Validator.validateCPF(edtCPF.getText().toString())){
 
             cpf = Mask.unmask(edtCPF.getText().toString());

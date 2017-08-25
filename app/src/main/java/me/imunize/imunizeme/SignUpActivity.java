@@ -61,9 +61,9 @@ public class SignUpActivity extends AppCompatActivity {
     public void cadastrarUsuario(){
 
 
-        if(Validator.validateNotNull(edtCpf, "Preencha o CPF") ||
-                Validator.validateNotNull(edtSenha, "Preencha a Senha") ||
-                Validator.validateNotNull(edtEmail, "Preencha o Email") ||
+        if(Validator.validateNotNull(edtCpf, "Preencha o CPF") &&
+                Validator.validateNotNull(edtSenha, "Preencha a Senha") &&
+                Validator.validateNotNull(edtEmail, "Preencha o Email") &&
                 Validator.validateNotNull(edtNomeCompleto, "Preencha o Nome"))
         {
 
