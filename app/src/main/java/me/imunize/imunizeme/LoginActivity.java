@@ -53,20 +53,23 @@ public class LoginActivity extends AppCompatActivity {
     protected void entrar() {
 
         if(Validator.validateNotNull(edtCPF, "Preencha o CPF") &&
-                Validator.validateNotNull(edtSenha, "Preencha a Senha") &&
-                Validator.validateCPF(edtCPF.getText().toString())){
+                Validator.validateNotNull(edtSenha, "Preencha a Senha")){
 
             cpf = Mask.unmask(edtCPF.getText().toString());
             senha = edtSenha.getText().toString();
 
             String auth = encriptationValue(cpf, senha);
 
-            layoutCampos.setVisibility(View.GONE);
-            layoutProgress.setVisibility(View.VISIBLE);
+            abreProgress();
 
             fazLogin(auth);
 
         }
+    }
+
+    private void abreProgress() {
+        layoutCampos.setVisibility(View.GONE);
+        layoutProgress.setVisibility(View.VISIBLE);
     }
 
     private void fazLogin(String auth) {
@@ -83,20 +86,26 @@ public class LoginActivity extends AppCompatActivity {
                     Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
                     startActivity(vaiPraHome);
                     finish();
-                }else{
+                }else if(response.code() == 401){
                     Toast.makeText(LoginActivity.this, "Login e/ou senha incorretos, tente Novamente.", Toast.LENGTH_SHORT).show();
-                    layoutCampos.setVisibility(View.VISIBLE);
-                    layoutProgress.setVisibility(View.GONE);
+                    fechaProgress();
+                }else{
+                    Toast.makeText(LoginActivity.this, "Com erro!", Toast.LENGTH_SHORT).show();
+                    fechaProgress();
                 }
             }
 
             @Override
             public void onFailure(Call<RespostaAutenticacao> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Com erro!", Toast.LENGTH_SHORT).show();
-                layoutCampos.setVisibility(View.VISIBLE);
-                layoutProgress.setVisibility(View.GONE);
+                fechaProgress();
             }
         });
+    }
+
+    private void fechaProgress() {
+        layoutCampos.setVisibility(View.VISIBLE);
+        layoutProgress.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.login_btcadastro)

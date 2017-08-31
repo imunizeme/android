@@ -137,6 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void pegaToken(String auth) {
+
         Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
 
         call.enqueue(new Callback<RespostaAutenticacao>() {

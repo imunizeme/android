@@ -42,12 +42,12 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
         MarkerOptions marcador = new MarkerOptions();
         marcador.position(fiap);
         marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
-        marcador.snippet("O meu app é foda, me chupem!");
+        marcador.snippet("Telefone: (11)4962-2120");
         googleMap.addMarker(marcador);
 
         marcador.position(gui);
-        marcador.title("Casa do Gui");
-        marcador.snippet("Parabéns pelo emprego");
+        marcador.title("Clínica Particular");
+        marcador.snippet("www.clinicaparticular.com.br");
         googleMap.addMarker(marcador);
 
         /*AlunoDAO alunoDAO = new AlunoDAO(getContext());
@@ -61,7 +61,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
 
         */
-        //new Localizador(getContext(), googleMap, getActivity());
+        new Localizador(getContext(), googleMap, getActivity());
     }
 
 

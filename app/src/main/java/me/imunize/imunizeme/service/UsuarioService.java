@@ -7,6 +7,8 @@ import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.dto.UsuarioCadastro;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.HeaderMap;
@@ -26,5 +28,9 @@ public interface UsuarioService {
 
     @POST("auth/auth")
     Call<RespostaAutenticacao> autenticarUsuario(@Header("Authorization") String authValue);
+
+    @FormUrlEncoded
+    @POST("api/imunizeme/public/notification_clients")
+    Call<Void> enviarToken(@Header("Authorization") String auth, @Field("client_id") String clientId);
 
 }
