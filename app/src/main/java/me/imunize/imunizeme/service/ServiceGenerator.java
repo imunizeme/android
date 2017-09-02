@@ -1,13 +1,12 @@
 package me.imunize.imunizeme.service;
 
-import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Created by Sr. Décio Montanhani on 20/08/2017.
@@ -35,7 +34,7 @@ public class ServiceGenerator{
         //Instância do retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
 

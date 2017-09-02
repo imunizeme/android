@@ -1,6 +1,6 @@
 package me.imunize.imunizeme.dto;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Sr. Décio Montanhani on 20/08/2017.
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class UserInfo {
     private int id;
     private String login;
-    @SerializedName("profile_id")
+    @JsonProperty("profile_id")
     private int profileId;
 
 

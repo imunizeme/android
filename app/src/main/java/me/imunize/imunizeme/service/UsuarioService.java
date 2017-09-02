@@ -2,6 +2,7 @@ package me.imunize.imunizeme.service;
 
 import java.util.Map;
 
+import me.imunize.imunizeme.dto.Profile;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.dto.UsuarioCadastro;
@@ -21,7 +22,11 @@ import retrofit2.http.POST;
 public interface UsuarioService {
 
     @POST("api/imunizeme/public/users")
-    Call<Void> cadastrarUsuario(@HeaderMap Map<String, String> map, @Body UsuarioCadastro user);
+    Call<Usuario> cadastrarUsuario(@HeaderMap Map<String, String> map, @Body UsuarioCadastro user);
+
+
+    @POST("api/imunizeme/public/profile")
+    Call<Void> cadastrarProfile(@Header("Authorization") String authValue, @Body Profile profile);
 
     @GET("api/imunizeme/public/users")
      Call<Usuario> pegarUsuario();

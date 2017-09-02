@@ -36,7 +36,7 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
 
         ListView listaVacinas = (ListView) view.findViewById(R.id.adulto_lista_vacinas);
         String[] vacinas = {"Tríplice Viral - Dose 1/3", "Hepatite B - Dose 1/3", "Varicela - Dose 1/2"};
-        listaVacinas.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, vacinas));
+        listaVacinas.setAdapter(new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, vacinas));
 
 
         final SwipeRefreshLayout swipe = (SwipeRefreshLayout) view.findViewById(R.id.adulto_swipe);

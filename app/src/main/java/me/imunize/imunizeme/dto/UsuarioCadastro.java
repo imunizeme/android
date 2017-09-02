@@ -1,6 +1,6 @@
 package me.imunize.imunizeme.dto;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Sr. Décio Montanhani on 21/08/2017.
@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UsuarioCadastro {
 
-    @SerializedName("cpf_cnpj")
+    @JsonProperty("cpf_cnpj")
     private String cpf;
     private String password;
 

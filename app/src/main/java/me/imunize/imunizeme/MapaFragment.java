@@ -24,6 +24,8 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        getActivity().setTitle("Clínicas Próximas");
+
         getMapAsync(this);
 
     }
@@ -32,8 +34,10 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+
         LatLng fiap = pegaCoordenadaDoEndereco("Avenida Lins de Vasconcelos, 1222 - São Paulo");
         LatLng gui = pegaCoordenadaDoEndereco("Rua Antonio Tavares, 300 - São Paulo");
+
         if (fiap != null) {
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
             googleMap.moveCamera(update);

@@ -1,6 +1,6 @@
 package me.imunize.imunizeme.dto;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Sr. Décio Montanhani on 20/08/2017.
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class RespostaAutenticacao {
 
     private String token;
-    @SerializedName("user_info")
+    @JsonProperty("user_info")
     private UserInfo userInfo;
 
     public String getToken() {

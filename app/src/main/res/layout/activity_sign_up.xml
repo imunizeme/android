@@ -7,8 +7,8 @@ android:layout_height="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:src="@drawable/logo_imunizeme"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
@@ -130,8 +130,44 @@ android:layout_height="match_parent"
                         android:textColor="#000"
                         android:inputType="numberSigned"
                         />
+
                 </LinearLayout>
-                <LinearLayout
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#000"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:id="@+id/layoutData">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_credit_card_black_24dp"
+                    android:layout_gravity="center"/>
+
+                <EditText
+                    android:id="@+id/signup_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="#00000000"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/signup_aniversario"
+                    android:inputType="numberSigned"
+                    android:textColor="#000"
+                    android:textColorHint="#000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#000"/>
@@ -141,7 +177,7 @@ android:layout_height="match_parent"
                     android:id="@+id/signup_btCadastrar"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="25dp"
                     android:layout_weight="1"
                     android:background="@drawable/border"
                     android:gravity="center"
@@ -150,8 +186,6 @@ android:layout_height="match_parent"
                     android:textColor="#000"
                     android:textStyle="bold"
                     />
-
-
 
         </LinearLayout>
 

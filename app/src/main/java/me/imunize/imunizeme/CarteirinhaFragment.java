@@ -18,13 +18,8 @@ import me.imunize.imunizeme.adapters.CarteirinhaFragmentPageAdapter;
 
 public class CarteirinhaFragment extends android.support.v4.app.Fragment{
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private FragmentManager fm;
 
-
-    public CarteirinhaFragment(FragmentManager fm) {
-        this.fm = fm;
+    public CarteirinhaFragment() {
     }
 
     @Nullable
@@ -32,17 +27,24 @@ public class CarteirinhaFragment extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carteirinha, container, false);
 
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+        getActivity().setTitle("Minha Carteirinha");
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        carregaFragments(view);
 
 
         return view;
     }
+
+    private void carregaFragments(View view) {
+        ViewPager viewPager =  view.findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        TabLayout tabLayout =  view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
-        CarteirinhaFragmentPageAdapter adapter = new CarteirinhaFragmentPageAdapter(fm);
+        CarteirinhaFragmentPageAdapter adapter = new CarteirinhaFragmentPageAdapter(getFragmentManager());
         adapter.addFragment(new AdultoFragment(), "ADULTO");
         adapter.addFragment(new CriancaFragment(), "CRIANÇA");
         viewPager.setAdapter(adapter);

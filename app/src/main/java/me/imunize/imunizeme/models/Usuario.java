@@ -1,8 +1,9 @@
 package me.imunize.imunizeme.models;
 
-import com.google.gson.annotations.SerializedName;
+import android.support.annotation.NonNull;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -12,30 +13,29 @@ import java.security.NoSuchAlgorithmException;
  * Created by Sr. Décio Montanhani on 09/08/2017.
  */
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Usuario implements Serializable{
 
-
     private Long id;
-    @SerializedName("name")
     private String name;
     private String email;
-    private String cpf_cnpj;
+    @JsonProperty("cpf_cnpj")
+    private String cpfCnpj;
     private String password;
 
 
-    public Usuario(String name, String email, String cpf_cnpj, String password) {
+    public Usuario(String name, String email, String cpfCnpj, String password) {
         this.name = name;
         this.email = email;
-        this.cpf_cnpj = cpf_cnpj;
+        this.cpfCnpj = cpfCnpj;
         this.password = password;
     }
 
     public Usuario() {
     }
 
-    public Usuario(String cpf_cnpj, String password) {
-        this.cpf_cnpj = cpf_cnpj;
+    public Usuario(String cpfCnpj, String password) {
+        this.cpfCnpj = cpfCnpj;
         this.password = password;
     }
 
@@ -63,12 +63,12 @@ public class Usuario implements Serializable{
         this.email = email;
     }
 
-    public String getCpf_cnpj() {
-        return cpf_cnpj;
+    public String getCpfCnpj() {
+        return cpfCnpj;
     }
 
-    public void setCpf_cnpj(String cpf_cnpj) {
-        this.cpf_cnpj = cpf_cnpj;
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
     }
 
     public String getPassword() {
@@ -83,7 +83,8 @@ public class Usuario implements Serializable{
         return sha1(password);
     }
 
-    static String sha1(String input)
+    @NonNull
+    private String sha1(String input)
     {
         MessageDigest mDigest = null;
         StringBuffer sb = null;

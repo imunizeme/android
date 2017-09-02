@@ -56,7 +56,7 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         ContentValues dados = new ContentValues();
         dados.put("nome", usuario.getName());
         dados.put("email", usuario.getEmail());
-        dados.put("cpf", usuario.getCpf_cnpj());
+        dados.put("cpf", usuario.getCpfCnpj());
         dados.put("senha", usuario.getPassword());
         return dados;
     }
@@ -72,7 +72,7 @@ public class UsuarioDAO extends SQLiteOpenHelper {
             usuario.setId(c.getLong(c.getColumnIndex("id")));
             usuario.setName(c.getString(c.getColumnIndex("nome")));
             usuario.setEmail(c.getString(c.getColumnIndex("email")));
-            usuario.setCpf_cnpj(c.getString(c.getColumnIndex("cpf")));
+            usuario.setCpfCnpj(c.getString(c.getColumnIndex("cpf")));
             usuario.setPassword(c.getString(c.getColumnIndex("senha")));
 
             usuarios.add(usuario);
@@ -115,13 +115,13 @@ public class UsuarioDAO extends SQLiteOpenHelper {
     public Usuario fazLogin(Usuario usuario){
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Users WHERE cpf = ? AND senha = ?", new String[]{usuario.getCpf_cnpj(), usuario.getPassword()});
+        Cursor c = db.rawQuery("SELECT * FROM Users WHERE cpf = ? AND senha = ?", new String[]{usuario.getCpfCnpj(), usuario.getPassword()});
 
         if (c.moveToNext()) {
             usuario.setId(c.getLong(c.getColumnIndex("id")));
             usuario.setName(c.getString(c.getColumnIndex("nome")));
             usuario.setEmail(c.getString(c.getColumnIndex("email")));
-            usuario.setCpf_cnpj(c.getString(c.getColumnIndex("cpf")));
+            usuario.setCpfCnpj(c.getString(c.getColumnIndex("cpf")));
             usuario.setPassword(c.getString(c.getColumnIndex("senha")));
 
             return usuario;
