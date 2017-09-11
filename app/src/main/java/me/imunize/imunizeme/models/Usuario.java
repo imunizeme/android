@@ -16,12 +16,15 @@ import java.security.NoSuchAlgorithmException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Usuario implements Serializable{
 
+    @JsonProperty("user_id")
     private Long id;
     private String name;
     private String email;
     @JsonProperty("cpf_cnpj")
     private String cpfCnpj;
     private String password;
+    @JsonProperty("birth_date")
+    private String aniversario;
 
 
     public Usuario(String name, String email, String cpfCnpj, String password) {
@@ -29,6 +32,7 @@ public class Usuario implements Serializable{
         this.email = email;
         this.cpfCnpj = cpfCnpj;
         this.password = password;
+        this.aniversario = aniversario;
     }
 
     public Usuario() {
@@ -101,5 +105,13 @@ public class Usuario implements Serializable{
         }
 
         return sb.toString();
+    }
+
+    public String getAniversario() {
+        return aniversario;
+    }
+
+    public void setAniversario(String aniversario) {
+        this.aniversario = aniversario;
     }
 }

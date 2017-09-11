@@ -21,17 +21,6 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carteirinha_crianca, container, false);
 
-        FloatingActionButton cadastrar = (FloatingActionButton) view.findViewById(R.id.crianca_nova_vacina);
-
-        cadastrar.setImageResource(R.drawable.icon_seringa);
-
-        cadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Estamos em manutenção. Tente mais tarde!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         final SwipeRefreshLayout swipe = (SwipeRefreshLayout) view.findViewById(R.id.crianca_swipe);
 
         ListView carteirinha = (ListView) view.findViewById(R.id.crianca_lista_vacinas);

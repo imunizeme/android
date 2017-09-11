@@ -1,5 +1,6 @@
 package me.imunize.imunizeme.service;
 
+import java.util.List;
 import java.util.Map;
 
 import me.imunize.imunizeme.dto.Profile;
@@ -14,6 +15,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Sr. Décio Montanhani on 16/08/2017.
@@ -24,9 +27,14 @@ public interface UsuarioService {
     @POST("api/imunizeme/public/users")
     Call<Usuario> cadastrarUsuario(@HeaderMap Map<String, String> map, @Body UsuarioCadastro user);
 
-
     @POST("api/imunizeme/public/profile")
     Call<Void> cadastrarProfile(@Header("Authorization") String authValue, @Body Profile profile);
+
+    //URL com JOIN
+    //https://imunize.me/api/imunizeme/public/profile?_join=inner:users:profile.user_id:$eq:users.id&users.id=1
+
+    @GET("api/imunizeme/public/profile?_join=inner:users:profile.user_id:$eq:users.id")
+    Call<List<Usuario>> pegarProfile(@Header("Authorization") String token, @Query("users.id") int userId);
 
     @GET("api/imunizeme/public/users")
      Call<Usuario> pegarUsuario();

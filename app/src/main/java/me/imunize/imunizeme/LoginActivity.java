@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -11,11 +12,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.helpers.Mask;
+import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.helpers.Validator;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
@@ -32,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_senha) EditText edtSenha;
     @BindView(R.id.login_layout_campos) LinearLayout layoutCampos;
     @BindView(R.id.login_layout_progress) RelativeLayout layoutProgress;
+    SPHelper spHelper;
 
     private String cpf, senha;
     UsuarioService usuarioService;
@@ -47,6 +54,23 @@ public class LoginActivity extends AppCompatActivity {
 
         edtCPF.addTextChangedListener(Mask.insert("###.###.###-##", edtCPF));
 
+        spHelper = new SPHelper(this);
+
+        if(spHelper.isFirstTime()) {
+
+            TapTargetSequence sequence = new TapTargetSequence(this).targets(
+
+                    TapTarget.forView(btCadastro, "Fazer Cadastro", "Clique aqui para fazer o Cadastro!").cancelable(false),
+                    TapTarget.forView(btEntrar, "Faça o Login", "Clique aqui para fazer o Login").cancelable(false)
+
+            );
+
+            sequence.start();
+
+            //spHelper.registrarAcesso();
+
+        }
+
     }
 
     @OnClick(R.id.login_btEntrar)
@@ -57,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
 
             cpf = Mask.unmask(edtCPF.getText().toString());
             senha = edtSenha.getText().toString();
+
+
 
             String auth = encriptationValue(cpf, senha);
 
@@ -82,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                 RespostaAutenticacao resposta = response.body();
 
                 if(response.isSuccessful()){
+
+                    spHelper.gravaToken(resposta.getToken());
+                    Log.i("token -> ", resposta.getToken());
                     Toast.makeText(LoginActivity.this, "Com sucesso!", Toast.LENGTH_SHORT).show();
                     Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
                     startActivity(vaiPraHome);

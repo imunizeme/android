@@ -23,16 +23,6 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carteirinha_adulto, container, false);
 
-        FloatingActionButton cadastrar = (FloatingActionButton) view.findViewById(R.id.adulto_nova_vacina);
-
-        cadastrar.setImageResource(R.drawable.icon_seringa);
-
-        cadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Estamos em manutenção. Tente mais tarde!", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         ListView listaVacinas = (ListView) view.findViewById(R.id.adulto_lista_vacinas);
         String[] vacinas = {"Tríplice Viral - Dose 1/3", "Hepatite B - Dose 1/3", "Varicela - Dose 1/2"};

@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signup_layout_campos) LinearLayout layoutCampos;
     @BindView(R.id.signup_layout_progress) RelativeLayout layoutProgress;
     @BindView(R.id.signup_data) EditText edtAniversario;
-    DateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
+    private DateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
     private UsuarioService usuarioService;
     String token;
 

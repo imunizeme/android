@@ -43,17 +43,19 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             googleMap.moveCamera(update);
         }
 
-        MarkerOptions marcador = new MarkerOptions();
-        marcador.position(fiap);
-        marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
-        marcador.snippet("Telefone: (11)4962-2120");
-        googleMap.addMarker(marcador);
+        if(fiap != null && gui != null) {
 
-        marcador.position(gui);
-        marcador.title("Clínica Particular");
-        marcador.snippet("www.clinicaparticular.com.br");
-        googleMap.addMarker(marcador);
+            MarkerOptions marcador = new MarkerOptions();
+            marcador.position(fiap);
+            marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
+            marcador.snippet("Telefone: (11)4962-2120");
+            googleMap.addMarker(marcador);
 
+            marcador.position(gui);
+            marcador.title("Clínica Particular");
+            marcador.snippet("www.clinicaparticular.com.br");
+            googleMap.addMarker(marcador);
+        }
         /*AlunoDAO alunoDAO = new AlunoDAO(getContext());
         for (Aluno aluno : alunoDAO.buscaAlunos()) {
             LatLng coordenada = pegaCoordenadaDoEndereco(aluno.getEndereco());
