@@ -59,13 +59,25 @@ public class SPHelper {
 
 
     public void gravaToken(String token){
-
-
+        token = "Bearer " + token;
         SharedPreferences.Editor ed = preferences.edit();
         ed.putString("token", token);
         ed.commit();
 
     }
+
+    public void gravaIdUsuario(int id){
+
+        SharedPreferences.Editor ed = preferences.edit();
+        ed.putInt("userId", id);
+        ed.commit();
+
+    }
+
+    public int pegaIdUsuario(){
+        return preferences.getInt("userId", 0);
+    }
+    
 
     public String pegaToken(){
 

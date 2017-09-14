@@ -156,12 +156,14 @@ public class SignUpActivity extends AppCompatActivity {
 
                     Usuario usuario1 = response.body();
 
-                    cadastraProfile(email, nomeCompleto, aniversario, usuario1.getId(),preferences.getString("token", null));
+                    if (usuario1 != null) {
+                        cadastraProfile(email, nomeCompleto, aniversario, usuario1.getId(), preferences.getString("token", null));
 
-                    Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
-                    Intent vaiPraLogin = new Intent(SignUpActivity.this, LoginActivity.class);
-                    startActivity(vaiPraLogin);
-                    finish();
+                        Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
+                        Intent vaiPraLogin = new Intent(SignUpActivity.this, LoginActivity.class);
+                        startActivity(vaiPraLogin);
+                        finish();
+                    }
 
                 }else{
                     Log.i("Body: ", response.raw().toString());
@@ -183,11 +185,13 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void cadastraProfile(final String email, final String nomeCompleto, final String aniversario, final Long id, String token) {
 
-        Call<Void> call = usuarioService.cadastrarProfile(token,new Profile(nomeCompleto, email, aniversario, id));
+        Call<Void> call = usuarioService.cadastrarProfile(token, new Profile(nomeCompleto, email, aniversario, id));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(SignUpActivity.this, "Profile Cadastrado!", Toast.LENGTH_SHORT).show();
+                if(response.isSuccessful()){
+                    Toast.makeText(SignUpActivity.this, "Profile Cadastrado!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -195,9 +199,6 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Erro ao inserir profile", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 
     private void pegaToken(String auth) {

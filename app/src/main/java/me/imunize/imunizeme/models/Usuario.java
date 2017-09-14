@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Usuario implements Serializable{
 
-    @JsonProperty("user_id")
+    //@JsonProperty("user_id")
     private Long id;
     private String name;
     private String email;
@@ -32,7 +32,6 @@ public class Usuario implements Serializable{
         this.email = email;
         this.cpfCnpj = cpfCnpj;
         this.password = password;
-        this.aniversario = aniversario;
     }
 
     public Usuario() {
@@ -88,7 +87,7 @@ public class Usuario implements Serializable{
     }
 
     @NonNull
-    private String sha1(String input)
+    public String sha1(String input)
     {
         MessageDigest mDigest = null;
         StringBuffer sb = null;

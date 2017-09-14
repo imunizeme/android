@@ -1,16 +1,20 @@
 package me.imunize.imunizeme;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.imunize.imunizeme.helpers.Mask;
 import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.models.Usuario;
@@ -23,6 +27,7 @@ import retrofit2.Response;
 public class ProfileActivity extends AppCompatActivity {
 
     String token;
+    Usuario user;
     UsuarioService usuarioService;
     @BindView(R.id.profile_txt_nome)
     EditText edtNome;
@@ -32,6 +37,10 @@ public class ProfileActivity extends AppCompatActivity {
     EditText edtAniversario;
     @BindView(R.id.profile_txt_email)
     EditText edtEmail;
+    @BindView(R.id.profile_layout_progress)
+    LinearLayout progressBar;
+    @BindView(R.id.profile_conteudo)
+    LinearLayout conteudoProfile;
 
 
     @Override
@@ -47,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         SPHelper spHelper = new SPHelper(this);
         token = spHelper.pegaToken();
-        token = "Bearer " + token;
+        //token = "Bearer " + token;
 
 /*
         Usuario usuario2 = new Usuario("Décio", "deciomontanhani@gmail.com", "45196631801", "senha");
@@ -58,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         if(token != null){
-            pegarProfile(token, 1);
+            pegarProfile(token, spHelper.pegaIdUsuario());
         }else{
             Toast.makeText(this, "Não está gravando o Token", Toast.LENGTH_SHORT).show();
         }
@@ -73,6 +82,15 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    private void exibeConteudo(){
+
+        progressBar.setVisibility(View.GONE);
+        conteudoProfile.setVisibility(View.VISIBLE);
+
+    }
+
+
+
     private void pegarProfile(String token, int id) {
         Call<List<Usuario>> call = usuarioService.pegarProfile(token, id);
         call.enqueue(new Callback<List<Usuario>>() {
@@ -81,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()){
                     Usuario usuario = response.body().get(0);
-                    Toast.makeText(ProfileActivity.this, usuario.getName(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ProfileActivity.this, usuario.getName(), Toast.LENGTH_SHORT).show();
                     preencheLabels(usuario);
                 }
             }
@@ -93,9 +111,21 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.profile_bt_alterar_senha)
+    protected void alteraSenha(){
+
+        Intent vaiAlterarSenha = new Intent(this, AlterarSenha.class);
+        vaiAlterarSenha.putExtra("usuario", user);
+        startActivity(vaiAlterarSenha);
+
+    }
+
+
     private void preencheLabels(Usuario usuario){
 
         if(usuario != null){
+            exibeConteudo();
+            user = usuario;
             edtNome.setText(usuario.getName());
             edtCpf.setText(usuario.getCpfCnpj());
             edtEmail.setText(usuario.getEmail());

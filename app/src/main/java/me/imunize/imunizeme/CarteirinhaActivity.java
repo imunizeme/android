@@ -46,6 +46,7 @@ public class CarteirinhaActivity extends AppCompatActivity
         setContentView(R.layout.activity_carteirinha);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        setTitle("Home");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

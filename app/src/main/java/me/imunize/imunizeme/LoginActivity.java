@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.dto.UserInfo;
 import me.imunize.imunizeme.helpers.Mask;
 import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.helpers.Validator;
@@ -110,6 +111,8 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
 
                     spHelper.gravaToken(resposta.getToken());
+                    UserInfo userInfo = resposta.getUserInfo();
+                    spHelper.gravaIdUsuario(userInfo.getId());
                     Log.i("token -> ", resposta.getToken());
                     Toast.makeText(LoginActivity.this, "Com sucesso!", Toast.LENGTH_SHORT).show();
                     Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
