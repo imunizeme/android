@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -67,7 +70,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
 
         */
-        new Localizador(getContext(), googleMap, getActivity());
+        //new Localizador(getContext(), googleMap, getActivity());
     }
 
 
