@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,7 +13,8 @@ import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +24,7 @@ import me.imunize.imunizeme.dto.UserInfo;
 import me.imunize.imunizeme.helpers.Mask;
 import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.helpers.Validator;
+import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
@@ -99,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         layoutProgress.setVisibility(View.VISIBLE);
     }
 
-    private void fazLogin(String auth) {
+    private void fazLogin(final String auth) {
         Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
 
         call.enqueue(new Callback<RespostaAutenticacao>() {
@@ -111,18 +112,27 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
 
                     spHelper.gravaToken(resposta.getToken());
+                    spHelper.gravaAuth(auth);
                     UserInfo userInfo = resposta.getUserInfo();
                     spHelper.gravaIdUsuario(userInfo.getId());
-                    Log.i("token -> ", resposta.getToken());
+
+                    carregaProfile(spHelper.pegaToken(), userInfo.getId());
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     Toast.makeText(LoginActivity.this, "Com sucesso!", Toast.LENGTH_SHORT).show();
                     Intent vaiPraHome = new Intent(LoginActivity.this, CarteirinhaActivity.class);
                     startActivity(vaiPraHome);
                     finish();
-                }else if(response.code() == 401){
+                }else if(response.code() > 309 && response.code() < 499){
                     Toast.makeText(LoginActivity.this, "Login e/ou senha incorretos, tente Novamente.", Toast.LENGTH_SHORT).show();
                     fechaProgress();
                 }else{
-                    Toast.makeText(LoginActivity.this, "Com erro!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Com erro. Verifique a sua conexão e tente novamente.", Toast.LENGTH_SHORT).show();
                     fechaProgress();
                 }
             }
@@ -131,6 +141,27 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<RespostaAutenticacao> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Com erro!", Toast.LENGTH_SHORT).show();
                 fechaProgress();
+            }
+        });
+    }
+
+    private synchronized void carregaProfile(String token, int id) {
+        Call<List<Usuario>> call = usuarioService.pegarProfile(token, id);
+        call.enqueue(new Callback<List<Usuario>>() {
+            @Override
+            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                if(response.isSuccessful()){
+
+                    Usuario usuario = response.body().get(0);
+
+                    spHelper.gravaPerfil(usuario.getName(), usuario.getEmail(), usuario.getAniversario());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+
             }
         });
     }

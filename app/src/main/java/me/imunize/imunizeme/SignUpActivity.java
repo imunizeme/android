@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +33,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.imunize.imunizeme.dto.Profile;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.dto.Sexo;
+import me.imunize.imunizeme.dto.SexoBO;
 import me.imunize.imunizeme.helpers.Mask;
 import me.imunize.imunizeme.helpers.Validator;
 import me.imunize.imunizeme.models.Usuario;
@@ -49,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signup_layout_campos) LinearLayout layoutCampos;
     @BindView(R.id.signup_layout_progress) RelativeLayout layoutProgress;
     @BindView(R.id.signup_data) EditText edtAniversario;
+    @BindView(R.id.signup_spn_sexo) Spinner spnSexo;
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
     private UsuarioService usuarioService;
     String token;
@@ -62,6 +69,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        List<Sexo> lista = new SexoBO().list();
+
+        spnSexo.setAdapter(new ArrayAdapter<Sexo>(this, android.R.layout.simple_spinner_item, lista));
+
         edtCpf.addTextChangedListener(Mask.insert("###.###.###-##", edtCpf));
         usuarioService = ServiceGenerator.createService();
 
@@ -70,12 +81,12 @@ public class SignUpActivity extends AppCompatActivity {
     @OnClick(R.id.signup_btCadastrar)
     public void cadastrarUsuario(){
 
-
         if(Validator.validateNotNull(edtCpf, "Preencha o CPF") &&
                 Validator.validateNotNull(edtSenha, "Preencha a Senha") &&
                 Validator.validateNotNull(edtEmail, "Preencha o Email") &&
                 Validator.validateNotNull(edtNomeCompleto, "Preencha o Nome") &&
-                Validator.validateNotNull(edtAniversario, "Preencha o Aniversário"))
+                Validator.validateNotNull(edtAniversario, "Preencha o Aniversário") &&
+                spnSexo.getSelectedItem() != null)
         {
 
             String email = edtEmail.getText().toString();
@@ -83,17 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
             String senha = edtSenha.getText().toString();
             String cpf = Mask.unmask(edtCpf.getText().toString());
             String aniversario = edtAniversario.getText().toString();
-
-           /* SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
-
-            Date data = null;
-
-            try {
-                data = dateFormat.parse(aniversario);
-                aniversario = dateFormat.format(data);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
+            Sexo sexo = (Sexo) spnSexo.getSelectedItem();
 
             boolean emailValido = Validator.validateEmail(email);
             boolean cpfValido = Validator.validateCPF(cpf);
@@ -109,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
             } else{
                 String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
                 pegaToken(auth);
-                fazCadastro(email, nomeCompleto, senha, cpf, aniversario);
+                fazCadastro(email, nomeCompleto, senha, cpf, aniversario, sexo.getSexo());
             }
         }
     }
@@ -117,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
     @OnClick(R.id.signup_data)
     public void selecionarData(){
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT ,new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -133,7 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    private void fazCadastro(final String email, final String nomeCompleto, final String senha, final String cpf, final String aniversario) {
+    private void fazCadastro(final String email, final String nomeCompleto, final String senha, final String cpf, final String aniversario, final String sexo) {
         Usuario usuario = new Usuario(nomeCompleto, email, cpf,senha);
 
         Log.i("Senha com hash: ", usuario.getHashPassword());
@@ -157,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Usuario usuario1 = response.body();
 
                     if (usuario1 != null) {
-                        cadastraProfile(email, nomeCompleto, aniversario, usuario1.getId(), preferences.getString("token", null));
+                        cadastraProfile(email, nomeCompleto, aniversario, usuario1.getId(), preferences.getString("token", null), sexo);
 
                         Toast.makeText(SignUpActivity.this, "Cadastro Realizado com sucesso!", Toast.LENGTH_LONG).show();
                         Intent vaiPraLogin = new Intent(SignUpActivity.this, LoginActivity.class);
@@ -183,9 +184,9 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void cadastraProfile(final String email, final String nomeCompleto, final String aniversario, final Long id, String token) {
+    private void cadastraProfile(final String email, final String nomeCompleto, final String aniversario, final Long id, String token, final String sexo) {
 
-        Call<Void> call = usuarioService.cadastrarProfile(token, new Profile(nomeCompleto, email, aniversario, id));
+        Call<Void> call = usuarioService.cadastrarProfile(token, new Profile(nomeCompleto, email, aniversario, id, sexo));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

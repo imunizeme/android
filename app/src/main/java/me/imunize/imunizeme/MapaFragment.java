@@ -1,9 +1,17 @@
 package me.imunize.imunizeme;
 
+import android.*;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,16 +26,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
 /**
  * Created by Sr. Décio Montanhani on 14/08/2017.
  */
-
+@RuntimePermissions
 public class MapaFragment extends SupportMapFragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        getActivity().setTitle("Clínicas Próximas");
+        getActivity().setTitle("Postos de Saúde");
 
         getMapAsync(this);
 
@@ -35,11 +46,13 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
 
     @Override
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void onMapReady(GoogleMap googleMap) {
 
 
         LatLng fiap = pegaCoordenadaDoEndereco("Avenida Lins de Vasconcelos, 1222 - São Paulo");
         LatLng gui = pegaCoordenadaDoEndereco("Rua Antonio Tavares, 300 - São Paulo");
+
 
         if (fiap != null) {
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
@@ -48,6 +61,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
         if(fiap != null && gui != null) {
 
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_action_star_10);
             MarkerOptions marcador = new MarkerOptions();
             marcador.position(fiap);
             marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
@@ -57,6 +71,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             marcador.position(gui);
             marcador.title("Clínica Particular");
             marcador.snippet("www.clinicaparticular.com.br");
+            marcador.icon(icon);
             googleMap.addMarker(marcador);
         }
         /*AlunoDAO alunoDAO = new AlunoDAO(getContext());
@@ -70,7 +85,8 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
 
         */
-        //new Localizador(getContext(), googleMap, getActivity());
+        new Localizador(getContext(), googleMap, getActivity());
+
     }
 
 

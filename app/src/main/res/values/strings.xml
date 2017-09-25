@@ -101,4 +101,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="profile_content_perfil">Imagem de Perfil</string>
+    <string name="intro_home">Seja bem vindo ao nosso App!\nAqui nós nos preocupamos com sua saúde e bem estar! Acesse o menu lateral e aproveite :)\nSe quiser saber mais sobre nós, acesse:  www.imunize.me</string>
 </resources>

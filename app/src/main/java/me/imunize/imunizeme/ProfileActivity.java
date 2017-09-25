@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
     LinearLayout progressBar;
     @BindView(R.id.profile_conteudo)
     LinearLayout conteudoProfile;
+    public static Activity fa;
 
 
     @Override
@@ -50,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setTitle("Perfil - Imunize.me");
 
+        fa = this;
 
         edtCpf.addTextChangedListener(Mask.insert("###.###.###-##", edtCpf));
         usuarioService = ServiceGenerator.createService();
@@ -76,9 +79,6 @@ public class ProfileActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-
-
 
     }
 
@@ -110,6 +110,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    @OnClick(R.id.profile_bt_alterar_dados)
+    protected void alterarDados(){
+
+        Intent vaiAlterarDados = new Intent(this, AlterarDadosActivity.class);
+        vaiAlterarDados.putExtra("usuario", user);
+        startActivity(vaiAlterarDados);
+        //finish();
+
+    }
+
 
     @OnClick(R.id.profile_bt_alterar_senha)
     protected void alteraSenha(){

@@ -1,6 +1,5 @@
 package me.imunize.imunizeme.adapters;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -21,13 +20,25 @@ import me.imunize.imunizeme.models.Vacina;
  * Created by Sr. Décio Montanhani on 13/09/2017.
  */
 
-public class VacinasAdapter extends RecyclerView.Adapter {
+public class VacinaAdultoAdapter extends RecyclerView.Adapter {
 
 
     @NonNull
     private List<ListItem> items = Collections.emptyList();
 
-    public VacinasAdapter(@NonNull List<ListItem> items) {
+    private static ItemLongClickListener itemClickListener;
+    private static MenuItemClickListener menuItemClickListener;
+
+
+    public void setMenuItemClickListener(MenuItemClickListener menuItemClickListener) {
+        VacinaAdultoAdapter.menuItemClickListener = menuItemClickListener;
+    }
+
+    public void setOnItemClickListener(ItemLongClickListener itemClickListener){
+        this.itemClickListener = itemClickListener;
+    }
+
+    public VacinaAdultoAdapter(@NonNull List<ListItem> items) {
         this.items = items;
     }
 
@@ -42,13 +53,25 @@ public class VacinasAdapter extends RecyclerView.Adapter {
             }
             case ListItem.TYPE_VACINA: {
                 View itemView = inflater.inflate(R.layout.item_list, parent, false);
-                return new VacinaViewHolder(itemView);
+                return new VacinaViewHolder(itemView, itemClickListener, menuItemClickListener);
             }
             default:
                 throw new IllegalStateException("unsupported item type");
         }
 
     }
+
+    public Vacina getItem(int position)
+    {
+
+        int viewType = getItemViewType(position);
+        if(viewType == ListItem.TYPE_VACINA) {
+            VacinaItem vacina = (VacinaItem) items.get(position);
+            return vacina.getVacina();
+        }
+        return null;
+    }
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {

@@ -16,13 +16,27 @@ public class WebViewActivity extends AppCompatActivity {
 
     @BindView(R.id.webView)
     WebView webView;
+    private String pdf = "http://drive.google.com/viewerng/viewer?embedded=true&url=";
+    private String site;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        setTitle("Notícias - Imunize.me");
+        if(getIntent().getBooleanExtra("isPDF", false) == true){
+
+            setTitle("Vacinas - Imunize.me");
+
+            site = pdf;
+            site += getIntent().getStringExtra("site");
+
+        }else{
+            setTitle("Notícias - Imunize.me");
+            site = getIntent().getStringExtra("site");
+        }
+
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
@@ -31,13 +45,16 @@ public class WebViewActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+
+
         WebSettings ws = webView.getSettings();
         ws.setJavaScriptEnabled(true);
         ws.setSupportZoom(false);
 
-        webView.loadUrl("http://drive.google.com/viewerng/viewer?embedded=true&url="+"https://apreendaapreender.files.wordpress.com/2012/05/o-pequeno-principe.pdf");
-        webView.setWebViewClient(new WebViewClient());
 
+
+        webView.loadUrl(site);
+        webView.setWebViewClient(new WebViewClient());
 
     }
 

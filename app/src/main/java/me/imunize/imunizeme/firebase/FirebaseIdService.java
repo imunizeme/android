@@ -9,6 +9,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import me.imunize.imunizeme.LoginActivity;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.dto.TokenDTO;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
@@ -47,12 +48,12 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String token =  preferences.getString("tokenFirebase", null);
 
-        Call<Void> call = usuarioService.enviarToken(token, refreshedToken);
+        Call<Void> call = usuarioService.enviarToken(token, new TokenDTO(refreshedToken));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(!response.isSuccessful()){
-                    //enviarTokenParaServidor(refreshedToken);
+                    enviarTokenParaServidor(refreshedToken);
                 }
             }
 

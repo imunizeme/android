@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -40,6 +42,9 @@ public class CarteirinhaActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
         Toolbar toolbar;
 
+    TextView txtNome;
+    TextView txtEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,8 @@ public class CarteirinhaActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("Home");
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,6 +63,17 @@ public class CarteirinhaActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+
+        //Log.i("Quantidade de header: ", String.valueOf(navigationView.getHeaderCount()));
+
+        txtEmail = headerView.findViewById(R.id.menu_header_email);
+        txtNome = headerView.findViewById(R.id.menu_header_nome);
+
+        SPHelper spHelper = new SPHelper(this);
+        txtNome.setText(spHelper.pegaNome());
+        txtEmail.setText(spHelper.pegaEmail());
 
         exibeSlider();
 

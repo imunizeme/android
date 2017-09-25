@@ -1,10 +1,9 @@
 package me.imunize.imunizeme;
 
-import android.app.Fragment;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,7 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import me.imunize.imunizeme.adapters.VacinasAdapter;
+import me.imunize.imunizeme.adapters.MenuItemClickListener;
+import me.imunize.imunizeme.adapters.VacinaCriancaAdapter;
 import me.imunize.imunizeme.list.HeaderItem;
 import me.imunize.imunizeme.list.ListItem;
 import me.imunize.imunizeme.list.VacinaItem;
@@ -54,7 +53,24 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
 
         //RecyclerView.LayoutManager layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
-        carteirinha.setAdapter(new VacinasAdapter(items));
+        VacinaCriancaAdapter adapter = new VacinaCriancaAdapter(items);
+
+        carteirinha.setAdapter(adapter);
+
+        adapter.setMenuItemClickListener(new MenuItemClickListener() {
+            @Override
+            public void onMenuItemClick(int position) {
+                VacinaItem item = (VacinaItem) items.get(position);
+                Vacina vacina = item.getVacina();
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setTitle("Informações");
+                dialog.setContentView(R.layout.info_vacinas);
+
+                TextView textoDoencas = (TextView) dialog.findViewById(R.id.dialog_edt_doencas);
+                textoDoencas.setText(vacina.getNome()+"  "+vacina.getData());
+                dialog.show();
+            }
+        });
 
         //carteirinha.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, vacinas));
 
@@ -87,8 +103,9 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
     @NonNull
     private List<Vacina> geraMockVacinas() {
         List<Vacina> lista = new ArrayList<>();
+        /*
         lista.add(new Vacina("H1N1", 1, "15/04/2017", 0));
-        lista.add(new Vacina("Meningocócica", 1, "13/09/2000", 0));
+        lista.add(new Vacina("Meningocócica", 1, "13/09/2000", 0));*/
         lista.add(new Vacina("Hepatite B", 2, "13/09/2018", 2));
         lista.add(new Vacina("Hepatite B", 3, "13/09/2019", 2));
         lista.add(new Vacina("Hepatite B", 1, "27/08/1996", 1));

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Doenças Evitadas: "/>
+
+    <EditText
+        android:id="@+id/dialog_edt_doencas"
+        android:enabled="false"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Observações: "/>
+
+    <EditText
+        android:id="@+id/dialog_edt_Observacoes"
+        android:enabled="false"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        />
+
+
+
+</LinearLayout>

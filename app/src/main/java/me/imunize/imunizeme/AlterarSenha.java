@@ -12,6 +12,7 @@ import java.io.Serializable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.imunize.imunizeme.dto.AlterarSenhaDTO;
 import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.service.ServiceGenerator;
@@ -59,7 +60,8 @@ public class AlterarSenha extends AppCompatActivity {
             if(comparaSenhasNovas()){
 
                 String novaSenha = usuario.sha1(edtNovaSenha.getText().toString());
-                Call<Void> call = usuarioService.alterarSenha(spHelper.pegaToken(), usuario.getCpfCnpj(), novaSenha);
+
+                Call<Void> call = usuarioService.alterarSenha(spHelper.pegaToken(), usuario.getCpfCnpj(), new AlterarSenhaDTO(novaSenha));
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

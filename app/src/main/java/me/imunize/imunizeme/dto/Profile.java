@@ -14,6 +14,7 @@ public class Profile {
     private Long id;
     private String name;
     private String email;
+    private String sexo;
     @JsonProperty("birth_date")
     private String aniversario;
     @JsonProperty("user_id")
@@ -22,11 +23,12 @@ public class Profile {
     public Profile() {
     }
 
-    public Profile(String name, String email, String aniversario, long userId) {
+    public Profile(String name, String email, String aniversario, long userId, String sexo) {
         this.name = name;
         this.email = email;
         this.aniversario = aniversario;
         this.userId = userId;
+        this.sexo = sexo;
     }
 
     public String getName() {
@@ -67,5 +69,13 @@ public class Profile {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 }

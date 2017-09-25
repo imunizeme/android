@@ -1,10 +1,9 @@
 package me.imunize.imunizeme;
 
-import android.app.Fragment;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import me.imunize.imunizeme.adapters.VacinasAdapter;
+import me.imunize.imunizeme.adapters.ItemLongClickListener;
+import me.imunize.imunizeme.adapters.MenuItemClickListener;
+import me.imunize.imunizeme.adapters.VacinaAdultoAdapter;
 import me.imunize.imunizeme.list.HeaderItem;
 import me.imunize.imunizeme.list.ListItem;
 import me.imunize.imunizeme.list.VacinaItem;
@@ -48,6 +48,11 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
         swipe = (SwipeRefreshLayout) view.findViewById(R.id.adulto_swipe);
         carteirinha = (RecyclerView) view.findViewById(R.id.adulto_lista_vacinas);
 
+        //Faz requisição e retorna vacinas tomadas e não tomadas
+        //Chama uma classe que vai percorrer a lista e decidir qual está atrasada e qual não está
+        //o metódo retorna uma lista do tipo <Vacina>, com um
+
+
         List<Vacina> lista = getMockVacinas();
         ordenaVacinas(lista);
 
@@ -56,13 +61,41 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         carteirinha.setLayoutManager(linearLayoutManager);
 
-        carteirinha.setAdapter(new VacinasAdapter(items));
+        VacinaAdultoAdapter adapter = new VacinaAdultoAdapter(items);
+
+        carteirinha.setAdapter(adapter);
+
+        registerForContextMenu(carteirinha);
 
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Toast.makeText(getContext(), "Atualizado!", Toast.LENGTH_SHORT).show();
                 swipe.setRefreshing(false);
+            }
+        });
+
+        /*adapter.setOnItemClickListener(new ItemLongClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                VacinaItem item = (VacinaItem) items.get(position);
+                Vacina vacina = item.getVacina();
+                Toast.makeText(getContext(), "vacina "+ vacina.getNome(), Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+        adapter.setMenuItemClickListener(new MenuItemClickListener() {
+            @Override
+            public void onMenuItemClick(int position) {
+                VacinaItem item = (VacinaItem) items.get(position);
+                Vacina vacina = item.getVacina();
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setTitle("Informações");
+                dialog.setContentView(R.layout.info_vacinas);
+
+                TextView textoDoencas = (TextView) dialog.findViewById(R.id.dialog_edt_doencas);
+                textoDoencas.setText(vacina.getNome()+"  "+vacina.getData());
+                dialog.show();
             }
         });
 

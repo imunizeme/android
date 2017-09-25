@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -46,7 +47,6 @@ public class CadernetaActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         relativeLayout = (RelativeLayout) findViewById(R.id.caderneta_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,7 +63,11 @@ public class CadernetaActivity extends AppCompatActivity {
 
     @OnClick(R.id.btCaderneta)
     public void adicionarVacina(){
-        Snackbar.make(relativeLayout, "Estamos em manutenção, tente mais tarde", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+        Intent intent = new Intent(this, VacinaActivity.class);
+        startActivity(intent);
+
+        //Snackbar.make(relativeLayout, "Estamos em manutenção, tente mais tarde", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override

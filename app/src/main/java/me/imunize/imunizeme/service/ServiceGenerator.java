@@ -15,7 +15,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class ServiceGenerator{
 
     //URL base do endpoint. Deve sempre terminar com /
-    public static final String API_BASE_URL = "https://imunize.me/";
+    public static final String API_BASE_URL = "http://imunize.me/";
 
     public static UsuarioService createService() {
 

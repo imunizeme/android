@@ -3,8 +3,12 @@ package me.imunize.imunizeme.service;
 import java.util.List;
 import java.util.Map;
 
+import me.imunize.imunizeme.dto.AlterarDadosDTO;
+import me.imunize.imunizeme.dto.AlterarSenhaDTO;
+import me.imunize.imunizeme.dto.Clinicas;
 import me.imunize.imunizeme.dto.Profile;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
+import me.imunize.imunizeme.dto.TokenDTO;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.dto.UsuarioCadastro;
 import retrofit2.Call;
@@ -34,9 +38,15 @@ public interface UsuarioService {
     //URL com JOIN
     //https://imunize.me/api/imunizeme/public/profile?_join=inner:users:profile.user_id:$eq:users.id&users.id=1
 
-    @FormUrlEncoded
+    @PUT("api/imunizeme/public/profile")
+    Call<Void> alterarProfile(@Header("Authorization") String token, @Query("user_id") int idUsuario, @Body AlterarDadosDTO dados);
+
+
+    @GET("api/_QUERIES/nearby/list")
+    Call<List<Clinicas>> pegarClinicas(@Header("Authorization") String token, @Query("lat") double lat, @Query("lng") double lng);
+
     @PUT("api/imunizeme/public/users")
-    Call<Void> alterarSenha(@Header("Authorization") String token, @Query("cpf_cnpj") String cpf, @Field("password") String senha);
+    Call<Void> alterarSenha(@Header("Authorization") String token, @Query("cpf_cnpj") String cpf, @Body AlterarSenhaDTO senha);
 
     @GET("api/imunizeme/public/profile?_join=inner:users:profile.user_id:$eq:users.id")
     Call<List<Usuario>> pegarProfile(@Header("Authorization") String token, @Query("users.id") int userId);
@@ -47,8 +57,7 @@ public interface UsuarioService {
     @POST("auth/auth")
     Call<RespostaAutenticacao> autenticarUsuario(@Header("Authorization") String authValue);
 
-    @FormUrlEncoded
     @POST("api/imunizeme/public/notification_clients")
-    Call<Void> enviarToken(@Header("Authorization") String auth, @Field("client_id") String clientId);
+    Call<Void> enviarToken(@Header("Authorization") String auth, @Body TokenDTO clientId);
 
 }

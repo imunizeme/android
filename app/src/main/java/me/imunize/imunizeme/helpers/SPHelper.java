@@ -35,14 +35,6 @@ public class SPHelper {
 
     }
 
-    public void salvaLogin(){
-
-        SharedPreferences.Editor ed = preferences.edit();
-        ed.putBoolean("primeiroAcesso", true);
-        ed.commit();
-
-    }
-
     public void gravaAuth(String auth){
 
 
@@ -89,6 +81,29 @@ public class SPHelper {
         SharedPreferences.Editor ed = preferences.edit();
         ed.putString("token", "");
         ed.putString("auth", "");
+        ed.putString("nome", "");
+        ed.putString("email", "");
+
         ed.commit();
     }
+
+    public void gravaPerfil(String name, String email, String aniversario) {
+
+        SharedPreferences.Editor ed = preferences.edit();
+        ed.putString("nome", name);
+        ed.putString("email", email);
+        ed.putString("aniversario", aniversario);
+        ed.commit();
+
+
+    }
+
+    public String pegaNome(){
+        return preferences.getString("nome", "Imunize.me");
+    }
+
+    public String pegaEmail(){
+        return preferences.getString("email", "Imunize.me");
+    }
+
 }

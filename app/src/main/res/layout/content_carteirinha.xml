@@ -7,15 +7,37 @@
     android:layout_height="match_parent">
 
 
+    <TextView
+        android:id="@+id/titulo_home"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Imunize.me - Seu aplicativo de Saúde"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/texto_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAlignment="center"
+        android:text="@string/intro_home"
+        android:layout_below="@id/titulo_home"
+        />
+
     <com.daimajia.slider.library.SliderLayout
         android:id="@+id/slider"
         android:layout_width="match_parent"
         custom:pager_animation="Accordion"
         custom:auto_cycle="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         custom:indicator_visibility="visible"
         custom:pager_animation_span="1100"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:layout_below="@id/texto_home"/>
 
     <com.daimajia.slider.library.Indicators.PagerIndicator
         android:id="@+id/custom_indicator"
