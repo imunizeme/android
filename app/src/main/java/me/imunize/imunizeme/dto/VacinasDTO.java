@@ -1,4 +1,4 @@
-package me.imunize.imunizeme.models;
+package me.imunize.imunizeme.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by Sr. Décio Montanhani on 25/09/2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Vacina implements Serializable {
+public class VacinasDTO implements Serializable {
 
     private int id;
     @JsonProperty("nome_vacina")
@@ -146,7 +146,7 @@ public class Vacina implements Serializable {
 
     @Override
     public String toString() {
-        return "Vacina{" +
+        return "VacinasDTO{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", dose=" + dose +

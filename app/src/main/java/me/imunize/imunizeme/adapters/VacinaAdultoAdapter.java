@@ -99,7 +99,8 @@ public class VacinaAdultoAdapter extends RecyclerView.Adapter {
                 VacinaItem vacina = (VacinaItem) items.get(position);
                 VacinaViewHolder holder1 = (VacinaViewHolder) viewHolder;
                 holder1.nome.setText(vacina.getVacina().getNome());
-                holder1.data.setText(vacina.getVacina().getData());
+                holder1.data.setText("12/12/12");
+                //holder1.data.setText(vacina.getVacina().getData().toString());
                 if (vacina.getVacina().getDose() == 0) {
                     holder1.dose.setText("Dose Única");
                 } else {

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,17 @@ import java.util.TreeMap;
 
 import me.imunize.imunizeme.adapters.MenuItemClickListener;
 import me.imunize.imunizeme.adapters.VacinaCriancaAdapter;
+import me.imunize.imunizeme.dto.VacinasDTO;
+import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.list.HeaderItem;
 import me.imunize.imunizeme.list.ListItem;
 import me.imunize.imunizeme.list.VacinaItem;
 import me.imunize.imunizeme.models.Vacina;
+import me.imunize.imunizeme.service.ServiceGenerator;
+import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Sr. Décio Montanhani on 17/08/2017.
@@ -36,6 +44,7 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
 
     @NonNull
     private List<ListItem> items = new ArrayList<>();
+    private List<Vacina> lista = new ArrayList<>();
 
     RecyclerView carteirinha;
 
@@ -47,9 +56,52 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
         carteirinha = (RecyclerView) view.findViewById(R.id.crianca_lista_vacinas);
         carteirinha.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Vacina> lista = geraMockVacinas();
+        //Início da Requisição da Lista
 
-        geraItensOrdenados(lista);
+        UsuarioService usuarioService = ServiceGenerator.createService();
+
+        SPHelper helper = new SPHelper(getContext());
+
+        Call<List<Vacina>> call = usuarioService.pegarVacinasCrianca(helper.pegaToken(), helper.pegaIdUsuario());
+
+        call.enqueue(new Callback<List<Vacina>>() {
+            @Override
+            public void onResponse(Call<List<Vacina>> call, Response<List<Vacina>> response) {
+
+                if(response.isSuccessful()){
+
+                    List<Vacina> vacinas = response.body();
+
+                    for (Vacina vacina :
+                            vacinas) {
+                        if (vacina.getIdCarteirinha() > 0) {
+                            vacina.setTomou(1);
+                            lista.add(vacina);
+                        }else{
+                            vacina.setTomou(0);
+                            lista.add(vacina);
+                        }
+                    }
+                    lista = ordenaVacinas(lista);
+                    geraItensOrdenados(lista);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Vacina>> call, Throwable t) {
+
+            }
+        });
+
+        //Fim do código da lista
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         //RecyclerView.LayoutManager layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -67,7 +119,9 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
                 dialog.setContentView(R.layout.info_vacinas);
 
                 TextView textoDoencas = (TextView) dialog.findViewById(R.id.dialog_edt_doencas);
-                textoDoencas.setText(vacina.getNome()+"  "+vacina.getData());
+                textoDoencas.setText(vacina.getDoencasEvitadas());
+                TextView textoObservacoes = (TextView) dialog.findViewById(R.id.dialog_edt_Observacoes);
+                textoObservacoes.setText(vacina.getObservacoes());
                 dialog.show();
             }
         });
@@ -100,22 +154,7 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    @NonNull
-    private List<Vacina> geraMockVacinas() {
-        List<Vacina> lista = new ArrayList<>();
-        /*
-        lista.add(new Vacina("H1N1", 1, "15/04/2017", 0));
-        lista.add(new Vacina("Meningocócica", 1, "13/09/2000", 0));*/
-        lista.add(new Vacina("Hepatite B", 2, "13/09/2018", 2));
-        lista.add(new Vacina("Hepatite B", 3, "13/09/2019", 2));
-        lista.add(new Vacina("Hepatite B", 1, "27/08/1996", 1));
-        lista.add(new Vacina("BCG", 0, "27/08/1996", 1));
-
-        ordenaVacinas(lista);
-        return lista;
-    }
-
-    private void ordenaVacinas(List<Vacina> vacinas) {
+    private List<Vacina> ordenaVacinas(List<Vacina> vacinas) {
         Collections.sort(vacinas, new Comparator<Vacina>() {
             @Override
             public int compare(Vacina vacina, Vacina t1) {
@@ -129,6 +168,8 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+
+        return vacinas;
     }
 
     @NonNull

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,17 @@ import java.util.TreeMap;
 import me.imunize.imunizeme.adapters.ItemLongClickListener;
 import me.imunize.imunizeme.adapters.MenuItemClickListener;
 import me.imunize.imunizeme.adapters.VacinaAdultoAdapter;
+import me.imunize.imunizeme.dto.VacinasDTO;
+import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.list.HeaderItem;
 import me.imunize.imunizeme.list.ListItem;
 import me.imunize.imunizeme.list.VacinaItem;
 import me.imunize.imunizeme.models.Vacina;
+import me.imunize.imunizeme.service.ServiceGenerator;
+import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Sr. Décio Montanhani on 17/08/2017.
@@ -40,6 +48,7 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
     private List<ListItem> items = new ArrayList<>();
     RecyclerView carteirinha;
     SwipeRefreshLayout swipe;
+    private List<Vacina> lista = new ArrayList<>();
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,10 +62,48 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
         //o metódo retorna uma lista do tipo <Vacina>, com um
 
 
-        List<Vacina> lista = getMockVacinas();
-        ordenaVacinas(lista);
+        UsuarioService usuarioService = ServiceGenerator.createService();
 
-        geraItensOrdenados(lista);
+        SPHelper helper = new SPHelper(getContext());
+
+        Call<List<Vacina>> call = usuarioService.pegarVacinasAdulto(helper.pegaToken(), helper.pegaIdUsuario());
+
+        call.enqueue(new Callback<List<Vacina>>() {
+            @Override
+            public void onResponse(Call<List<Vacina>> call, Response<List<Vacina>> response) {
+
+                if(response.isSuccessful()){
+
+                    List<Vacina> vacinas = response.body();
+
+                    for (Vacina vacina :
+                            vacinas) {
+                        if (vacina.getIdCarteirinha() > 0) {
+                            vacina.setTomou(1);
+                            lista.add(vacina);
+                        }else{
+                            vacina.setTomou(0);
+                            lista.add(vacina);
+                        }
+                    }
+
+                    lista = ordenaVacinas(lista);
+                    geraItensOrdenados(lista);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Vacina>> call, Throwable t) {
+
+            }
+        });
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         carteirinha.setLayoutManager(linearLayoutManager);
@@ -75,15 +122,6 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        /*adapter.setOnItemClickListener(new ItemLongClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                VacinaItem item = (VacinaItem) items.get(position);
-                Vacina vacina = item.getVacina();
-                Toast.makeText(getContext(), "vacina "+ vacina.getNome(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
         adapter.setMenuItemClickListener(new MenuItemClickListener() {
             @Override
             public void onMenuItemClick(int position) {
@@ -94,7 +132,10 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
                 dialog.setContentView(R.layout.info_vacinas);
 
                 TextView textoDoencas = (TextView) dialog.findViewById(R.id.dialog_edt_doencas);
-                textoDoencas.setText(vacina.getNome()+"  "+vacina.getData());
+                textoDoencas.setText(vacina.getDoencasEvitadas());
+                TextView textoObservacoes = (TextView) dialog.findViewById(R.id.dialog_edt_Observacoes);
+                textoObservacoes.setText(vacina.getObservacoes());
+
                 dialog.show();
             }
         });
@@ -119,7 +160,7 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    @NonNull
+    /*@NonNull
     private List<Vacina> getMockVacinas() {
         List<Vacina> lista = new ArrayList<>();
         lista.add(new Vacina("H1N1", 1, "15/04/2017", 0));
@@ -129,9 +170,9 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
         lista.add(new Vacina("Hepatite B", 1, "27/08/1996", 1));
         lista.add(new Vacina("BCG", 0, "27/08/1996", 1));
         return lista;
-    }
+    }*/
 
-    private void ordenaVacinas(List<Vacina> vacinas) {
+    private List<Vacina> ordenaVacinas(List<Vacina> vacinas) {
         Collections.sort(vacinas, new Comparator<Vacina>() {
             @Override
             public int compare(Vacina vacina, Vacina t1) {
@@ -145,6 +186,7 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+        return vacinas;
     }
 
     @NonNull

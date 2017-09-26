@@ -54,11 +54,11 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
         LatLng gui = pegaCoordenadaDoEndereco("Rua Antonio Tavares, 300 - São Paulo");
 
 
-        if (fiap != null) {
+       /* if (fiap != null) {
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
             googleMap.moveCamera(update);
         }
-
+*/
         if(fiap != null && gui != null) {
 
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_action_star_10);

@@ -9,8 +9,10 @@ import me.imunize.imunizeme.dto.Clinicas;
 import me.imunize.imunizeme.dto.Profile;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.dto.TokenDTO;
+import me.imunize.imunizeme.dto.VacinasDTO;
 import me.imunize.imunizeme.models.Usuario;
 import me.imunize.imunizeme.dto.UsuarioCadastro;
+import me.imunize.imunizeme.models.Vacina;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -41,6 +43,11 @@ public interface UsuarioService {
     @PUT("api/imunizeme/public/profile")
     Call<Void> alterarProfile(@Header("Authorization") String token, @Query("user_id") int idUsuario, @Body AlterarDadosDTO dados);
 
+    @GET("api/_QUERIES/vacinas/getchild")
+    Call<List<Vacina>> pegarVacinasCrianca(@Header("Authorization") String token, @Query("user_id") int idUsuario);
+
+    @GET("api/_QUERIES/vacinas/getadult")
+    Call<List<Vacina>> pegarVacinasAdulto(@Header("Authorization") String token, @Query("user_id") int idUsuario);
 
     @GET("api/_QUERIES/nearby/list")
     Call<List<Clinicas>> pegarClinicas(@Header("Authorization") String token, @Query("lat") double lat, @Query("lng") double lng);

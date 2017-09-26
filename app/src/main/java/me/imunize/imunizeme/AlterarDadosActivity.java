@@ -58,7 +58,7 @@ public class AlterarDadosActivity extends AppCompatActivity {
                 Validator.validateNotNull(edtAniversario, "Preencha o Aniversário")) {
 
 
-            AlterarDadosDTO dados = new AlterarDadosDTO();
+            final AlterarDadosDTO dados = new AlterarDadosDTO();
 
             dados.setName(edtNome.getText().toString());
             dados.setEmail(edtEmail.getText().toString());
@@ -73,6 +73,8 @@ public class AlterarDadosActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(AlterarDadosActivity.this, "Dados alterados com sucesso!!", Toast.LENGTH_SHORT).show();
+                        new SPHelper(AlterarDadosActivity.this).gravaPerfil(dados.getName(), dados.getEmail(), dados.getAniversario());
+
                         ProfileActivity.fa.finish();
                         Intent intent = new Intent(AlterarDadosActivity.this, ProfileActivity.class);
                         startActivity(intent);

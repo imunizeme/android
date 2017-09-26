@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -39,6 +40,7 @@ public class CarteirinhaActivity extends AppCompatActivity
 
 
     private SliderLayout mDemoSlider;
+    public static Context context;
     @BindView(R.id.toolbar)
         Toolbar toolbar;
 
@@ -53,7 +55,7 @@ public class CarteirinhaActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         setTitle("Home");
 
-
+        context = this;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,9 +66,10 @@ public class CarteirinhaActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View headerView = navigationView.getHeaderView(0);
 
         //Log.i("Quantidade de header: ", String.valueOf(navigationView.getHeaderCount()));
+
+        View headerView = navigationView.getHeaderView(0);
 
         txtEmail = headerView.findViewById(R.id.menu_header_email);
         txtNome = headerView.findViewById(R.id.menu_header_nome);
@@ -79,10 +82,27 @@ public class CarteirinhaActivity extends AppCompatActivity
 
     }
 
+    protected void atualizaMenu(){
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        txtEmail = headerView.findViewById(R.id.menu_header_email);
+        txtNome = headerView.findViewById(R.id.menu_header_nome);
+
+        SPHelper spHelper = new SPHelper(this);
+        txtNome.setText(spHelper.pegaNome());
+        txtEmail.setText(spHelper.pegaEmail());
+
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
 
+        atualizaMenu();
         SPHelper spHelper = new SPHelper(this);
 
         if(spHelper.isFirstTime() && toolbar != null) {
