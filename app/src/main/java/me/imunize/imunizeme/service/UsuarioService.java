@@ -40,6 +40,9 @@ public interface UsuarioService {
     //URL com JOIN
     //https://imunize.me/api/imunizeme/public/profile?_join=inner:users:profile.user_id:$eq:users.id&users.id=1
 
+    @POST("api/imunizeme/public/carteirinha_vacina")
+    Call<Void> cadastrarVacinaTomada(@Header("Authorization") String token, @Body VacinasDTO vacinasDTO);
+
     @PUT("api/imunizeme/public/profile")
     Call<Void> alterarProfile(@Header("Authorization") String token, @Query("user_id") int idUsuario, @Body AlterarDadosDTO dados);
 

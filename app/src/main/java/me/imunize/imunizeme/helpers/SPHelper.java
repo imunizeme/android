@@ -98,6 +98,10 @@ public class SPHelper {
 
     }
 
+    public String pegaAniversario(){
+        return preferences.getString("aniversario", null);
+    }
+
     public String pegaNome(){
         return preferences.getString("nome", "Imunize.me");
     }

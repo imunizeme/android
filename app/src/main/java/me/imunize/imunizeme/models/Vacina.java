@@ -146,19 +146,24 @@ public class Vacina implements Serializable {
 
     @Override
     public String toString() {
-        return "Vacina{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", dose=" + dose +
-                ", doseAnterior=" + doseAnterior +
-                ", periodoDoseAnterior=" + periodoDoseAnterior +
-                ", reforco=" + reforco +
-                ", idadeInicio=" + idadeInicio +
-                ", doencasEvitadas='" + doencasEvitadas + '\'' +
-                ", observacoes='" + observacoes + '\'' +
-                ", idCarteirinha=" + idCarteirinha +
-                ", data=" + data +
-                ", idVacinaTomada=" + idVacinaTomada +
-                '}';
+
+        boolean temVacinaNoNome = nome.contains("Vacina");
+        String nomeCortado;
+
+        if(temVacinaNoNome){
+            nomeCortado = nome.substring(6, 16);
+        }else{
+            nomeCortado = nome.substring(0, 10);
+        }
+
+        String retorno;
+        if(reforco){
+            retorno = nomeCortado + ". " + dose + "ª Dose REFORCO";
+        }else{
+            retorno = nomeCortado + ". " + dose + "ª Dose";
+        }
+
+        return retorno;
+
     }
 }

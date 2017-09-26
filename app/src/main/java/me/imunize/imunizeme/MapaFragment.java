@@ -54,19 +54,15 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
         LatLng gui = pegaCoordenadaDoEndereco("Rua Antonio Tavares, 300 - São Paulo");
 
 
-       /* if (fiap != null) {
+        if (fiap != null) {
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(fiap, 17);
             googleMap.moveCamera(update);
         }
-*/
-        if(fiap != null && gui != null) {
+
+        if(gui != null) {
 
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_action_star_10);
             MarkerOptions marcador = new MarkerOptions();
-            marcador.position(fiap);
-            marcador.title("FIAP - Faculdade de Informática e Administração Paulista");
-            marcador.snippet("Telefone: (11)4962-2120");
-            googleMap.addMarker(marcador);
 
             marcador.position(gui);
             marcador.title("Clínica Particular");
@@ -74,17 +70,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             marcador.icon(icon);
             googleMap.addMarker(marcador);
         }
-        /*AlunoDAO alunoDAO = new AlunoDAO(getContext());
-        for (Aluno aluno : alunoDAO.buscaAlunos()) {
-            LatLng coordenada = pegaCoordenadaDoEndereco(aluno.getEndereco());
-            if (coordenada != null) {
 
-            }
-        }
-        alunoDAO.close();
-
-
-        */
         new Localizador(getContext(), googleMap, getActivity());
 
     }

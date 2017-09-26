@@ -15,10 +15,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -49,7 +55,7 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
     RecyclerView carteirinha;
     SwipeRefreshLayout swipe;
     private List<Vacina> lista = new ArrayList<>();
-
+    private DateFormat postgres = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_carteirinha_adulto, container, false);
@@ -82,13 +88,40 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
                             vacina.setTomou(1);
                             lista.add(vacina);
                         }else{
-                            vacina.setTomou(0);
+
+                            String dataString = new SPHelper(getContext()).pegaAniversario();
+                            Date date = new Date();
+                            try {
+                                date = postgres.parse(dataString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(date);
+                            c.add(Calendar.MONTH, vacina.getIdadeInicio());
+                            vacina.setData(c.getTime());
+                            Date today = new Date();
+                            if(today.before(vacina.getData())){
+                                vacina.setTomou(2);
+                            }else{
+                                vacina.setTomou(0);
+                            }
                             lista.add(vacina);
+                            /*
+                            *Código Antigo
+                            vacina.setTomou(0);
+                            lista.add(vacina);*/
                         }
                     }
 
                     lista = ordenaVacinas(lista);
                     geraItensOrdenados(lista);
+                    if(carteirinha != null){
+                        if(carteirinha.getAdapter() != null){
+                            carteirinha.getAdapter().notifyDataSetChanged();
+                        }
+                    }
                 }
 
             }
@@ -99,11 +132,11 @@ public class AdultoFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        try {
-            Thread.sleep(500);
+       /* try {
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         carteirinha.setLayoutManager(linearLayoutManager);

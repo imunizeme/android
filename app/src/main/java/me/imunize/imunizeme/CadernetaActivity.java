@@ -1,5 +1,6 @@
 package me.imunize.imunizeme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,7 @@ public class CadernetaActivity extends AppCompatActivity {
     private ViewPager viewPager;
     @BindView(R.id.btCaderneta)
     FloatingActionButton btAdicionar;
+    public static Activity fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class CadernetaActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        fa = this;
         btAdicionar.setImageResource(R.drawable.icon_seringa);
 
         setTitle("Minha Caderneta");

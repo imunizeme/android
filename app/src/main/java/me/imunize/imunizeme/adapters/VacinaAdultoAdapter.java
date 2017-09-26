@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import me.imunize.imunizeme.R;
 import me.imunize.imunizeme.list.HeaderItem;
@@ -28,6 +31,7 @@ public class VacinaAdultoAdapter extends RecyclerView.Adapter {
 
     private static ItemLongClickListener itemClickListener;
     private static MenuItemClickListener menuItemClickListener;
+    private DateFormat format = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
 
 
     public void setMenuItemClickListener(MenuItemClickListener menuItemClickListener) {
@@ -98,8 +102,16 @@ public class VacinaAdultoAdapter extends RecyclerView.Adapter {
             case ListItem.TYPE_VACINA: {
                 VacinaItem vacina = (VacinaItem) items.get(position);
                 VacinaViewHolder holder1 = (VacinaViewHolder) viewHolder;
-                holder1.nome.setText(vacina.getVacina().getNome());
-                holder1.data.setText("12/12/12");
+                if(vacina.getVacina().isReforco()){
+                    holder1.nome.setText(vacina.getVacina().getNome()+ " REFORÇO");
+                }else{
+                    holder1.nome.setText(vacina.getVacina().getNome());
+                }
+                if(vacina.getVacina().getData() != null){
+                    holder1.data.setText(format.format(vacina.getVacina().getData()));
+                }else{
+                    holder1.data.setText("A definir");
+                }
                 //holder1.data.setText(vacina.getVacina().getData().toString());
                 if (vacina.getVacina().getDose() == 0) {
                     holder1.dose.setText("Dose Única");

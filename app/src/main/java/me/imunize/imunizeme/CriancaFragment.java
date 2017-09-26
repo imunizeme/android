@@ -15,10 +15,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -45,6 +51,7 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
     @NonNull
     private List<ListItem> items = new ArrayList<>();
     private List<Vacina> lista = new ArrayList<>();
+    private DateFormat postgres = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 
     RecyclerView carteirinha;
 
@@ -78,12 +85,40 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
                             vacina.setTomou(1);
                             lista.add(vacina);
                         }else{
-                            vacina.setTomou(0);
+
+                            String dataString = new SPHelper(getContext()).pegaAniversario();
+                            Date date = new Date();
+                            try {
+                                date = postgres.parse(dataString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(date);
+                            c.add(Calendar.MONTH, vacina.getIdadeInicio());
+                            vacina.setData(c.getTime());
+                            Date today = new Date();
+                            if(today.before(vacina.getData())){
+                                vacina.setTomou(2);
+                            }else{
+                                vacina.setTomou(0);
+                            }
                             lista.add(vacina);
+                            /*
+                            *Código Antigo
+                            vacina.setTomou(0);
+                            lista.add(vacina);*/
+
                         }
                     }
                     lista = ordenaVacinas(lista);
                     geraItensOrdenados(lista);
+                    if(carteirinha != null){
+                        if(carteirinha.getAdapter() != null){
+                            carteirinha.getAdapter().notifyDataSetChanged();
+                        }
+                    }
                 }
 
             }
@@ -96,11 +131,11 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
 
         //Fim do código da lista
 
-        try {
-            Thread.sleep(700);
+        /*try {
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         //RecyclerView.LayoutManager layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -139,6 +174,20 @@ public class CriancaFragment extends android.support.v4.app.Fragment {
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        carteirinha.getAdapter().notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        carteirinha.getAdapter().notifyDataSetChanged();
     }
 
     private void geraItensOrdenados(List<Vacina> lista) {

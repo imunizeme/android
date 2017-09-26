@@ -49,7 +49,7 @@ public class VacinaViewHolder extends RecyclerView.ViewHolder implements View.On
             clicklistener.onItemClick(getAdapterPosition());
         }
 
-        MenuItem itemDetalhes = menu.add("Informações das Vacinas");
+        MenuItem itemDetalhes = menu.add("Informações da Vacina");
         itemDetalhes.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

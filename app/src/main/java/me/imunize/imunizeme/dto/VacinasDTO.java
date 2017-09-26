@@ -12,153 +12,43 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VacinasDTO implements Serializable {
 
-    private int id;
-    @JsonProperty("nome_vacina")
-    private String nome;
-    private int dose;
-    @JsonProperty("dose_anterior_id")
-    private int doseAnterior;
-    @JsonProperty("periodo_dose_anterior")
-    private int periodoDoseAnterior;
-    private boolean reforco;
-    @JsonProperty("idade_inicio")
-    private int idadeInicio;
-    @JsonProperty("doencas_evitadas")
-    private String doencasEvitadas;
-    private String observacoes;
-    @JsonProperty("cv_id")
-    private int idCarteirinha;
-    @JsonProperty("data_tomada")
-    private Date data;
+    @JsonProperty("user_id")
+    private int userId;
     @JsonProperty("vacinas_id")
-    private int idVacinaTomada;
-    private int tomou;
+    private int vacinaId;
+    @JsonProperty("data_tomada")
+    private String dataTomada;
 
-    public int getTomou() {
-        return tomou;
+    public VacinasDTO() {
     }
 
-    public void setTomou(int tomou) {
-        this.tomou = tomou;
+    public VacinasDTO(int userId, int vacinaId, String dataTomada) {
+        this.userId = userId;
+        this.vacinaId = vacinaId;
+        this.dataTomada = dataTomada;
     }
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getNome() {
-        return nome;
+    public int getVacinaId() {
+        return vacinaId;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setVacinaId(int vacinaId) {
+        this.vacinaId = vacinaId;
     }
 
-    public int getDose() {
-        return dose;
+    public String getDataTomada() {
+        return dataTomada;
     }
 
-    public void setDose(int dose) {
-        this.dose = dose;
-    }
-
-    public int getDoseAnterior() {
-        return doseAnterior;
-    }
-
-    public void setDoseAnterior(int doseAnterior) {
-        this.doseAnterior = doseAnterior;
-    }
-
-    public int getPeriodoDoseAnterior() {
-        return periodoDoseAnterior;
-    }
-
-    public void setPeriodoDoseAnterior(int periodoDoseAnterior) {
-        this.periodoDoseAnterior = periodoDoseAnterior;
-    }
-
-    public boolean isReforco() {
-        return reforco;
-    }
-
-    public void setReforco(boolean reforco) {
-        this.reforco = reforco;
-    }
-
-    public int getIdadeInicio() {
-        return idadeInicio;
-    }
-
-    public void setIdadeInicio(int idadeInicio) {
-        this.idadeInicio = idadeInicio;
-    }
-
-    public String getDoencasEvitadas() {
-        return doencasEvitadas;
-    }
-
-    public void setDoencasEvitadas(String doencasEvitadas) {
-        this.doencasEvitadas = doencasEvitadas;
-    }
-
-    public String getObservacoes() {
-        return observacoes;
-    }
-
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
-
-    public int getIdCarteirinha() {
-        return idCarteirinha;
-    }
-
-    public void setIdCarteirinha(int idCarteirinha) {
-        this.idCarteirinha = idCarteirinha;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public int getIdVacinaTomada() {
-        return idVacinaTomada;
-    }
-
-    public void setIdVacinaTomada(int idVacinaTomada) {
-        this.idVacinaTomada = idVacinaTomada;
-    }
-
-    /*@Override
-    public String toString() {
-        return nome + ", " + idVacinaTomada + ", " + idCarteirinha + ", Data tomada: " + data;
-    }
-    */
-
-    @Override
-    public String toString() {
-        return "VacinasDTO{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", dose=" + dose +
-                ", doseAnterior=" + doseAnterior +
-                ", periodoDoseAnterior=" + periodoDoseAnterior +
-                ", reforco=" + reforco +
-                ", idadeInicio=" + idadeInicio +
-                ", doencasEvitadas='" + doencasEvitadas + '\'' +
-                ", observacoes='" + observacoes + '\'' +
-                ", idCarteirinha=" + idCarteirinha +
-                ", data=" + data +
-                ", idVacinaTomada=" + idVacinaTomada +
-                '}';
+    public void setDataTomada(String dataTomada) {
+        this.dataTomada = dataTomada;
     }
 }

@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import me.imunize.imunizeme.R;
 import me.imunize.imunizeme.list.HeaderItem;
@@ -29,6 +32,7 @@ public class VacinaCriancaAdapter extends RecyclerView.Adapter {
 
     private static ItemLongClickListener itemClickListener;
     private static MenuItemClickListener menuItemClickListener;
+    private DateFormat format = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
 
 
     public void setMenuItemClickListener(MenuItemClickListener menuItemClickListener) {
@@ -100,13 +104,13 @@ public class VacinaCriancaAdapter extends RecyclerView.Adapter {
                 VacinaItem vacina = (VacinaItem) items.get(position);
                 VacinaViewHolder holder1 = (VacinaViewHolder) viewHolder;
                 holder1.nome.setText(vacina.getVacina().getNome());
-                holder1.data.setText("13/13/13");
-                //holder1.data.setText(vacina.getVacina().getData().toString());
-                if (vacina.getVacina().getDose() == 0) {
-                    holder1.dose.setText("Dose Única");
-                } else {
-                    holder1.dose.setText("Dose " + vacina.getVacina().getDose());
+                if(vacina.getVacina().getData() != null){
+                    holder1.data.setText(format.format(vacina.getVacina().getData()));
+                }else{
+                    holder1.data.setText("A definir");
                 }
+                holder1.dose.setText("Dose " + vacina.getVacina().getDose());
+
                 switch (vacina.getVacina().getTomou()) {
                     case 1:
                         holder1.tomou.setImageResource(R.drawable.ic_check_64dp);
