@@ -10,6 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import me.imunize.imunizeme.LoginActivity;
 import me.imunize.imunizeme.dto.RespostaAutenticacao;
 import me.imunize.imunizeme.dto.TokenDTO;
+import me.imunize.imunizeme.helpers.SPHelper;
 import me.imunize.imunizeme.service.ServiceGenerator;
 import me.imunize.imunizeme.service.UsuarioService;
 import retrofit2.Call;
@@ -40,20 +41,20 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
         String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
 
         autenticar(usuarioService, auth);
-
         callEnviarToken(refreshedToken, usuarioService);
     }
 
     private void callEnviarToken(final String refreshedToken, UsuarioService usuarioService) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String token =  preferences.getString("tokenFirebase", null);
+
+        final SPHelper helper = new SPHelper(this);
+        String token =  helper.pegaToken();
 
         Call<Void> call = usuarioService.enviarToken(token, new TokenDTO(refreshedToken));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(!response.isSuccessful()){
-                    enviarTokenParaServidor(refreshedToken);
+                if(response.isSuccessful()){
+                    helper.gravaFirebaseToken(refreshedToken);
                 }
             }
 
@@ -76,11 +77,8 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
                 if(response.isSuccessful()){
                     String token =  "Bearer " + resposta.getToken();
                     Log.i("Token -> ", token);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FirebaseIdService.this);
-                    SharedPreferences.Editor ed = preferences.edit();
-                    ed.putString("tokenFirebase", token);
-                    ed.commit();
-
+                    SPHelper helper = new SPHelper(FirebaseIdService.this);
+                    helper.gravaToken(token);
                 }
             }
 

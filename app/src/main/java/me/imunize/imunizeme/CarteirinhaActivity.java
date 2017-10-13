@@ -2,7 +2,9 @@ package me.imunize.imunizeme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -28,12 +30,19 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.imunize.imunizeme.dto.TokenDTO;
 import me.imunize.imunizeme.helpers.SPHelper;
+import me.imunize.imunizeme.service.ServiceGenerator;
+import me.imunize.imunizeme.service.UsuarioService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CarteirinhaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,7 +51,7 @@ public class CarteirinhaActivity extends AppCompatActivity
     private SliderLayout mDemoSlider;
     public static Context context;
     @BindView(R.id.toolbar)
-        Toolbar toolbar;
+    Toolbar toolbar;
 
     TextView txtNome;
     TextView txtEmail;
@@ -80,6 +89,28 @@ public class CarteirinhaActivity extends AppCompatActivity
 
         exibeSlider();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String token =  preferences.getString("tokenFirebase", null);
+
+        if(spHelper.pegaFirebaseToken() == null) {
+            spHelper.gravaFirebaseToken(FirebaseInstanceId.getInstance().getToken());
+            UsuarioService usuarioService = ServiceGenerator.createService();
+            Call<Void> call = usuarioService.enviarToken(spHelper.pegaToken(), new TokenDTO(spHelper.pegaFirebaseToken()));
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (!response.isSuccessful()) {
+                        Log.i("Token Firebase:", "Enviado!");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+        }
+
     }
 
     protected void atualizaMenu(){
@@ -109,7 +140,7 @@ public class CarteirinhaActivity extends AppCompatActivity
 
             TapTargetSequence sequence = new TapTargetSequence(this).targets(
 
-                TapTarget.forToolbarNavigationIcon(toolbar, "Navegar entre opções", "Selecione aqui pra acessar suas opções").cancelable(false)
+                    TapTarget.forToolbarNavigationIcon(toolbar, "Navegar entre opções", "Selecione aqui pra acessar suas opções").cancelable(false)
 
             );
 

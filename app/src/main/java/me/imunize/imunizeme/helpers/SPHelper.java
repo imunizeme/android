@@ -27,6 +27,10 @@ public class SPHelper {
         return !preferences.contains("primeiroAcesso");
     }
 
+    public String pegaFirebaseToken(){
+        return preferences.getString("firebase", null);
+    }
+
     public void registrarAcesso(){
 
         SharedPreferences.Editor ed = preferences.edit();
@@ -34,6 +38,16 @@ public class SPHelper {
         ed.commit();
 
     }
+
+
+
+    public void gravaFirebaseToken(String token){
+
+        SharedPreferences.Editor ed = preferences.edit();
+        ed.putString("firebase", token);
+        ed.commit();
+    }
+
 
     public void gravaAuth(String auth){
 

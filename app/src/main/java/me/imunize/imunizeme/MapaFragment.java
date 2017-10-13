@@ -65,7 +65,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             MarkerOptions marcador = new MarkerOptions();
 
             marcador.position(gui);
-            marcador.title("Clínica Particular");
+            marcador.title("Clínica Particular - Código de desconto(IMUNIZEME)");
             marcador.snippet("www.clinicaparticular.com.br");
             marcador.icon(icon);
             googleMap.addMarker(marcador);

@@ -1,5 +1,7 @@
 package me.imunize.imunizeme.models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -147,14 +149,19 @@ public class Vacina implements Serializable {
     @Override
     public String toString() {
 
-        boolean temVacinaNoNome = nome.contains("Vacina");
         String nomeCortado;
 
-        if(temVacinaNoNome){
-            nomeCortado = nome.substring(6, 16);
+        if(nome.contains("Vacina Oral de")){
+            nomeCortado = nome.replace("Vacina Oral de", "");
+        }else if(nome.contains("Vacina Oral ")){
+            nomeCortado = nome.replace("Vacina Oral ", "");
+        }else if(nome.contains("Vacina ")){
+            nomeCortado = nome.replace("Vacina ", "");
         }else{
-            nomeCortado = nome.substring(0, 10);
+            nomeCortado = nome;
         }
+
+
 
         String retorno;
         if(reforco){

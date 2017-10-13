@@ -109,8 +109,7 @@ public class SignUpActivity extends AppCompatActivity {
                 edtCpf.requestFocus();
             } else{
                 String auth = LoginActivity.encriptationValue("45196631801", "imunizeme");
-                pegaToken(auth);
-                fazCadastro(email, nomeCompleto, senha, cpf, aniversario, sexo.getSexo());
+                pegaToken(auth, email, nomeCompleto, senha, cpf, aniversario, sexo.getSexo());
             }
         }
     }
@@ -202,7 +201,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void pegaToken(String auth) {
+    private void pegaToken(String auth, final String email, final String nomeCompleto, final String senha, final String cpf, final String aniversario, final String sexo) {
 
         Call<RespostaAutenticacao> call = usuarioService.autenticarUsuario(auth);
 
@@ -219,11 +218,12 @@ public class SignUpActivity extends AppCompatActivity {
                     SharedPreferences.Editor ed = preferences.edit();
                     ed.putString("token", token);
                     ed.commit();
+                    fazCadastro(email, nomeCompleto, senha, cpf, aniversario, sexo);
 
-                    Toast.makeText(SignUpActivity.this, "Autenticou com Administrador", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SignUpActivity.this, "Autenticou com Administrador", Toast.LENGTH_SHORT).show();
                 }
             }
-
+            
             @Override
             public void onFailure(Call<RespostaAutenticacao> call, Throwable t) {
                 Toast.makeText(SignUpActivity.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
